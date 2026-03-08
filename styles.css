@@ -1,0 +1,549 @@
+/* Global */
+:root {
+  --sa-bg: #000000;
+  --sa-bg-elevated: #050505;
+  --sa-bg-soft: #080808;
+  --sa-text: #f5f5f5;
+  --sa-muted: #8c8c8c;
+  --sa-border-subtle: #222222;
+  --sa-accent: #5cff9c; /* terminal green accent */
+  --sa-radius-lg: 18px;
+  --sa-radius-md: 12px;
+  --sa-radius-sm: 8px;
+  --sa-shadow-soft: 0 20px 45px rgba(0, 0, 0, 0.55);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: radial-gradient(circle at top, #151520 0, var(--sa-bg) 40%, #02020a 100%);
+  color: var(--sa-text);
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  position: relative;
+}
+
+body::before {
+  content: "";
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.04) 0,
+    rgba(255, 255, 255, 0.04) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  mix-blend-mode: soft-light;
+  opacity: 0.08;
+  z-index: 0;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Header */
+.sa-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: blur(16px);
+  background: linear-gradient(to bottom, rgba(5, 5, 9, 0.96), rgba(5, 5, 9, 0.78));
+}
+
+.sa-header-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sa-logo img {
+  height: 72px;
+}
+
+.sa-nav {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.sa-nav a {
+  color: var(--sa-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 500;
+  font-size: 0.78rem;
+  padding-bottom: 2px;
+  border-bottom: 1px solid transparent;
+}
+
+.sa-nav a:hover {
+  color: var(--sa-text);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* (header CTA pill removed; using standard nav link for Lets Talk) */
+
+/* Main */
+.sa-main {
+  max-width: 1120px;
+  margin: 0 auto 80px;
+  padding: 24px 20px 80px;
+}
+
+/* Hero */
+.sa-hero {
+  padding: 56px 0 10px;
+  position: relative;
+  overflow: hidden;
+  /* No custom background – let it inherit the site gradient so it blends */
+}
+
+.sa-hero::before,
+.sa-hero::after {
+  content: none;
+}
+
+.sa-hero-content {
+  max-width: 960px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.sa-tagline {
+  margin: 0 0 10px;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--sa-muted);
+}
+
+.sa-hero h1 {
+  margin: 0 0 20px;
+  font-family: "Anton", system-ui, sans-serif;
+  font-size: clamp(2.4rem, 4vw, 3.1rem);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+}
+
+/* (hero services line removed per design tweak) */
+
+.sa-hero-copy {
+  margin: 4px 0 28px;
+  color: var(--sa-muted);
+  max-width: none;
+  font-size: 0.9rem;
+}
+
+.sa-hero-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.sa-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease, border 0.12s ease;
+}
+
+.sa-btn-primary {
+  background: transparent;
+  border-color: #ffffff;
+  color: #ffffff;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.6);
+}
+
+.sa-btn-hero {
+  font-size: 0.9rem;
+  letter-spacing: 0.22em;
+}
+
+.sa-btn-primary:hover {
+  background: #ff7b4a;
+  border-color: #ff7b4a;
+  color: #000;
+}
+
+.sa-btn-ghost {
+  background: rgba(16, 16, 23, 0.95);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.sa-btn-ghost:hover {
+  background: rgba(22, 22, 32, 1);
+}
+
+/* Sections */
+.sa-section {
+  margin-top: 60px;
+  scroll-margin-top: 96px; /* offset for sticky header so titles aren't hidden */
+}
+
+.sa-section-header {
+  margin-bottom: 24px;
+}
+
+.sa-section-header h2 {
+  margin: 0 0 6px;
+  font-size: 1.1rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.sa-section-header p {
+  margin: 0;
+  color: var(--sa-muted);
+  max-width: 520px;
+}
+
+.sa-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.sa-grid-2 {
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1.3fr);
+}
+
+/* Commercial section now only uses a single column */
+#commercial .sa-grid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.sa-grid-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.sa-panel {
+  background: #050505;
+  border-radius: var(--sa-radius-lg);
+  border: 1px solid var(--sa-border-subtle);
+  padding: 18px 18px 18px;
+  box-shadow: var(--sa-shadow-soft);
+}
+
+.sa-panel h3 {
+  margin: 0 0 8px;
+  font-size: 0.9rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* Select Casting highlight panel */
+.sa-panel-select-casting {
+  background: radial-gradient(circle at top left, rgba(255, 123, 74, 0.22), #050505);
+  border-color: rgba(255, 123, 74, 0.55);
+}
+
+#casting .sa-select-headline {
+  margin: 0 0 10px;
+  font-size: 1.08rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+/* Fine-tune spacing inside Select Casting panel */
+#casting .sa-panel-select-casting .sa-panel-copy:first-of-type {
+  margin-top: 6px; /* space between headline and first sentence */
+}
+
+#casting .sa-panel-select-casting .sa-bullet-checklist {
+  margin: 10px 0 12px;
+}
+
+.sa-panel h4 {
+  margin: 10px 0 4px;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sa-muted);
+}
+
+.sa-panel-copy {
+  margin: 0 0 12px;
+  color: var(--sa-muted);
+}
+
+.sa-panel-list ul {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--sa-muted);
+}
+
+.sa-panel-list li + li {
+  margin-top: 4px;
+}
+
+/* Checklist bullets for Select Casting block */
+.sa-bullet-checklist {
+  list-style: none;
+  margin: 6px 0 10px;
+  padding: 0;
+}
+
+.sa-bullet-checklist li {
+  position: relative;
+  padding-left: 20px;
+}
+
+.sa-bullet-checklist li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: #ff7b4a;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+/* Video */
+.sa-video-frame {
+  position: relative;
+  border-radius: var(--sa-radius-md);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #000;
+}
+
+.sa-video-frame::before {
+  content: "";
+  display: block;
+  padding-top: 56.25%;
+}
+
+.sa-video-frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* ADR Photos */
+.sa-panel-photo {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+
+.sa-photo-placeholder {
+  border-radius: var(--sa-radius-lg);
+  border: none;
+  overflow: hidden;
+  background: #050505;
+  height: 100%;
+}
+
+.sa-photo-placeholder img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.sa-photo-caption {
+  margin: 10px 0 0;
+  font-size: 0.78rem;
+  color: var(--sa-muted);
+}
+
+/* Parking previews */
+.sa-parking-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  margin-top: 10px;
+}
+
+.sa-parking-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.sa-parking-preview {
+  border-radius: var(--sa-radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+  background: #050505;
+  margin-bottom: 8px;
+}
+
+.sa-parking-preview iframe,
+.sa-parking-preview img {
+  width: 100%;
+  height: 220px;
+  border: none;
+  object-fit: cover;
+}
+
+/* Animation tiles */
+.sa-grid-animation {
+  align-items: stretch;
+}
+
+.sa-panel-select {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  background: radial-gradient(circle at top left, rgba(255, 123, 74, 0.25), #050505);
+  border-color: rgba(255, 123, 74, 0.5);
+}
+
+.sa-select-logo-row {
+  margin-bottom: 8px;
+}
+
+.sa-select-logo-row-main {
+  margin-bottom: 10px;
+}
+
+.sa-select-logo {
+  height: 32px;
+}
+
+.sa-select-headline {
+  margin: 0 0 6px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sa-select-actions {
+  margin-top: 4px;
+}
+
+.sa-select-btn {
+  font-size: 0.75rem;
+}
+
+.sa-show-tile {
+  border-radius: var(--sa-radius-lg);
+  border: 1px solid var(--sa-border-subtle);
+  padding: 16px;
+  background: radial-gradient(circle at top, rgba(255, 255, 255, 0.06), rgba(8, 8, 14, 1));
+  box-shadow: var(--sa-shadow-soft);
+}
+
+.sa-show-image {
+  border-radius: var(--sa-radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: #050505;
+  overflow: hidden;
+  margin-bottom: 8px;
+  height: 170px;
+}
+
+.sa-show-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.sa-show-tile h3 {
+  margin: 4px 0 2px;
+  font-size: 0.96rem;
+}
+
+.sa-show-meta {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--sa-muted);
+}
+
+/* Contact */
+.sa-section-contact {
+  margin-top: 80px;
+}
+
+.sa-contact-box {
+  margin-top: 12px;
+  padding: 18px 18px 16px;
+  border-radius: var(--sa-radius-lg);
+  background: rgba(10, 10, 16, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.85);
+}
+
+.sa-contact-line {
+  margin: 0 0 6px;
+}
+
+.sa-contact-line.small {
+  font-size: 0.8rem;
+  color: var(--sa-muted);
+}
+
+.sa-contact-box a {
+  color: var(--sa-text);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+/* Footer */
+.sa-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 18px 20px 28px;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--sa-muted);
+  background: #050509;
+}
+
+/* Responsive */
+@media (max-width: 820px) {
+  .sa-header-inner {
+    padding-inline: 16px;
+  }
+
+  .sa-nav {
+    display: none; /* keep it ultra-minimal for now on mobile */
+  }
+
+  .sa-main {
+    padding-inline: 16px;
+  }
+
+  .sa-grid-2,
+  .sa-grid-3 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sa-hero {
+    padding-top: 40px;
+  }
+}
