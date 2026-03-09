@@ -302,6 +302,12 @@ a {
   color: var(--sa-muted);
 }
 
+/* Make Select Casting copy white for readability */
+.sa-panel-select-casting .sa-panel-copy,
+.sa-panel-select-casting .sa-bullet-checklist {
+  color: var(--sa-text);
+}
+
 .sa-panel-list ul {
   margin: 0;
   padding-left: 18px;
