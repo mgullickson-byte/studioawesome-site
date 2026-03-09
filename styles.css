@@ -116,7 +116,10 @@ a {
   padding: 56px 0 10px;
   position: relative;
   overflow: hidden;
-  /* No custom background – let it inherit the site gradient so it blends */
+  /* Make hero effectively full-screen under the sticky header */
+  min-height: calc(100vh - 120px);
+  display: flex;
+  align-items: center;
 }
 
 .sa-hero::before,
@@ -209,7 +212,7 @@ a {
 /* Sections */
 .sa-section {
   margin-top: 60px;
-  scroll-margin-top: 96px; /* offset for sticky header so titles aren't hidden */
+  scroll-margin-top: 120px; /* slightly more breathing room below sticky header */
 }
 
 .sa-section-header {
@@ -221,6 +224,8 @@ a {
   font-size: 1.1rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
+  /* Use the original header font, just update the color to match the logo */
+  color: #ff7b4a;
 }
 
 .sa-section-header p {
@@ -238,9 +243,9 @@ a {
   grid-template-columns: minmax(0, 2fr) minmax(0, 1.3fr);
 }
 
-/* Commercial section now only uses a single column */
+/* Commercial section: 2-up grid of spots on desktop */
 #commercial .sa-grid {
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .sa-grid-3 {
@@ -262,10 +267,9 @@ a {
   text-transform: uppercase;
 }
 
-/* Select Casting highlight panel */
+/* Select Casting panel (keep in line with other panels, no extra orange pill) */
 .sa-panel-select-casting {
-  background: radial-gradient(circle at top left, rgba(255, 123, 74, 0.22), #050505);
-  border-color: rgba(255, 123, 74, 0.55);
+  /* Inherit default .sa-panel background and border */
 }
 
 #casting .sa-select-headline {
@@ -404,14 +408,47 @@ a {
 .sa-parking-preview iframe,
 .sa-parking-preview img {
   width: 100%;
-  height: 220px;
+  height: 420px; /* unified window size for both locations */
   border: none;
+  /* Center-crop so both maps fill the frame similarly */
   object-fit: cover;
 }
 
-/* Animation tiles */
+/* Animation & ADR tiles */
 .sa-grid-animation {
   align-items: stretch;
+}
+
+.sa-show-toggle-row {
+  margin-top: 10px;
+  text-align: right;
+}
+
+.sa-show-toggle {
+  background: none;
+  border: none;
+  color: var(--sa-muted);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+}
+
+.sa-show-toggle:hover {
+  color: var(--sa-text);
+}
+
+/* Extra show tiles are hidden until expanded */
+#commercial-videos .sa-show-extra,
+#adr-shows .sa-show-extra,
+#animation-shows .sa-show-extra {
+  display: none;
+}
+
+#commercial-videos.sa-expanded .sa-show-extra,
+#adr-shows.sa-expanded .sa-show-extra,
+#animation-shows.sa-expanded .sa-show-extra {
+  display: block;
 }
 
 .sa-panel-select {
@@ -445,6 +482,7 @@ a {
 
 .sa-select-actions {
   margin-top: 4px;
+  text-align: center;
 }
 
 .sa-select-btn {
@@ -481,6 +519,30 @@ a {
 }
 
 .sa-show-meta {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--sa-muted);
+}
+
+/* People */
+.sa-people-grid {
+  gap: 16px;
+}
+
+.sa-person-card {
+  border-radius: var(--sa-radius-lg);
+  border: 1px solid var(--sa-border-subtle);
+  padding: 16px;
+  background: radial-gradient(circle at top, rgba(255, 255, 255, 0.04), rgba(8, 8, 14, 1));
+  box-shadow: var(--sa-shadow-soft);
+}
+
+.sa-person-card h3 {
+  margin: 0 0 4px;
+  font-size: 0.95rem;
+}
+
+.sa-person-role {
   margin: 0;
   font-size: 0.8rem;
   color: var(--sa-muted);
@@ -543,7 +605,16 @@ a {
     grid-template-columns: minmax(0, 1fr);
   }
 
+  /* On mobile, keep Commercial videos stacked 1-up */
+  #commercial .sa-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .sa-hero {
     padding-top: 40px;
+  }
+
+  .sa-contact-layout {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
