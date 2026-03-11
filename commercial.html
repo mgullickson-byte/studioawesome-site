@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Commercial | Studio Awesome</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="sa-header">
+    <div class="sa-header-inner">
+      <a href="index.html" class="sa-logo">
+        <img src="assets/logo.png" alt="Studio Awesome" />
+      </a>
+      <nav class="sa-nav">
+        <a href="commercial.html">Commercial</a>
+        <a href="adr.html">ADR</a>
+        <a href="animation.html">Animation</a>
+        <a href="voiceover.html">Voiceover</a>
+        <a href="casting.html">Casting</a>
+        <a href="people.html">People</a>
+        <a href="parking.html">Parking</a>
+        <a href="contact.html">Let&apos;s Talk</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top" class="sa-main">
+    <section id="commercial" class="sa-section">
+      <div class="sa-section-header">
+        <h2>Commercial</h2>
+        <p>VO | Mix | Sound Design</p>
+      </div>
+      <div id="commercial-videos" class="sa-grid sa-grid-2">
+        <div class="sa-panel">
+          <div class="sa-video-wrap">
+            <iframe class="sa-video-iframe" src="https://player.vimeo.com/video/1171948863?title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;controls=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="Commercial Spot 1"></iframe>
+            <div class="sa-video-overlay"><button class="sa-play-btn" aria-label="Play">&#9654;</button><button class="sa-restart-btn" aria-label="Restart">&#8635;</button></div>
+          </div>
+        </div>
+        <div class="sa-panel">
+          <div class="sa-video-wrap">
+            <iframe class="sa-video-iframe" src="https://player.vimeo.com/video/1171948757?title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;controls=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="Commercial Spot 2"></iframe>
+            <div class="sa-video-overlay"><button class="sa-play-btn" aria-label="Play">&#9654;</button><button class="sa-restart-btn" aria-label="Restart">&#8635;</button></div>
+          </div>
+        </div>
+        <div class="sa-panel">
+          <div class="sa-video-wrap">
+            <iframe class="sa-video-iframe" src="https://player.vimeo.com/video/1171948615?title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;controls=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="Commercial Spot 3"></iframe>
+            <div class="sa-video-overlay"><button class="sa-play-btn" aria-label="Play">&#9654;</button><button class="sa-restart-btn" aria-label="Restart">&#8635;</button></div>
+          </div>
+        </div>
+        <div class="sa-panel">
+          <div class="sa-video-wrap">
+            <iframe class="sa-video-iframe" src="https://player.vimeo.com/video/1171948564?title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;controls=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="Commercial Spot 4"></iframe>
+            <div class="sa-video-overlay"><button class="sa-play-btn" aria-label="Play">&#9654;</button><button class="sa-restart-btn" aria-label="Restart">&#8635;</button></div>
+          </div>
+        </div>
+      </div>
+      <div class="sa-show-toggle-row">
+        <button type="button" class="sa-show-toggle" data-target="commercial-videos">+ Show more</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="sa-footer">
+    <p>© <span id="year"></span> Studio Awesome. All rights reserved.</p>
+  </footer>
+
+  <script src="https://player.vimeo.com/api/player.js"></script>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Show/hide toggle
+    document.querySelectorAll('.sa-show-toggle').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var targetId = btn.getAttribute('data-target');
+        var grid = document.getElementById(targetId);
+        if (!grid) return;
+        var expanded = grid.classList.toggle('sa-expanded');
+        btn.textContent = expanded ? '− Show less' : '+ Show more';
+      });
+    });
+
+    // Custom play/pause/restart overlay
+    document.querySelectorAll('.sa-video-wrap').forEach(function (wrap) {
+      var iframe = wrap.querySelector('.sa-video-iframe');
+      var overlay = wrap.querySelector('.sa-video-overlay');
+      var playBtn = wrap.querySelector('.sa-play-btn');
+      var restartBtn = wrap.querySelector('.sa-restart-btn');
+      var player = new Vimeo.Player(iframe);
+      var playing = false;
+
+      playBtn.addEventListener('click', function () {
+        if (playing) {
+          player.pause();
+        } else {
+          player.play();
+        }
+      });
+
+      restartBtn.addEventListener('click', function () {
+        player.setCurrentTime(0).then(function () {
+          player.play();
+        });
+      });
+
+      player.on('play', function () {
+        playing = true;
+        playBtn.innerHTML = '&#9646;&#9646;';
+        overlay.classList.add('sa-video-playing');
+        overlay.classList.remove('sa-video-ended');
+      });
+
+      player.on('pause', function () {
+        playing = false;
+        playBtn.innerHTML = '&#9654;';
+        overlay.classList.remove('sa-video-playing');
+      });
+
+      player.on('ended', function () {
+        playing = false;
+        playBtn.innerHTML = '&#9654;';
+        overlay.classList.remove('sa-video-playing');
+        overlay.classList.add('sa-video-ended');
+      });
+    });
+  </script>
+</body>
+</html>

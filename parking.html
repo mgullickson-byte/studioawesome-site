@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Parking | Studio Awesome</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="sa-header">
+    <div class="sa-header-inner">
+      <a href="index.html" class="sa-logo">
+        <img src="assets/logo.png" alt="Studio Awesome" />
+      </a>
+      <nav class="sa-nav">
+        <a href="commercial.html">Commercial</a>
+        <a href="adr.html">ADR</a>
+        <a href="animation.html">Animation</a>
+        <a href="voiceover.html">Voiceover</a>
+        <a href="casting.html">Casting</a>
+        <a href="people.html">People</a>
+        <a href="parking.html">Parking</a>
+        <a href="contact.html">Let&apos;s Talk</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top" class="sa-main">
+    <section id="parking" class="sa-section">
+      <div class="sa-section-header">
+        <h2>Parking</h2>
+        <p>Free parking at Western. Validated parking at Argyle.</p>
+      </div>
+      <div class="sa-contact-box">
+        <div class="sa-parking-grid">
+          <div class="sa-parking-item">
+            <div class="sa-parking-preview">
+              <img src="assets/argyle-map-thumb.jpg" alt="1608 Argyle parking map" />
+            </div>
+            <p class="sa-contact-line">
+              <a href="https://www.google.com/maps?q=1608+Argyle+Ave,+Los+Angeles,+CA+90028" target="_blank" rel="noopener">
+                1608 Argyle Ave, Los Angeles, CA 90028
+              </a>
+            </p>
+            <p class="sa-contact-line small">
+              <a href="assets/argyle-parking.pdf" target="_blank" rel="noopener">Download Argyle parking PDF</a>
+            </p>
+          </div>
+          <div class="sa-parking-item">
+            <div class="sa-parking-preview">
+              <img src="assets/western-map-thumb.jpg" alt="1838 N Western Ave parking map" />
+            </div>
+            <p class="sa-contact-line">
+              <a href="https://www.google.com/maps?q=1838+N+Western+Ave,+Los+Angeles,+CA+90027" target="_blank" rel="noopener">
+                1838 N Western Ave, Los Angeles, CA 90027
+              </a>
+            </p>
+            <p class="sa-contact-line small">
+              <a href="assets/western-parking.pdf" target="_blank" rel="noopener">Download Western parking PDF</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="sa-footer">
+    <p>© <span id="year"></span> Studio Awesome. All rights reserved.</p>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
