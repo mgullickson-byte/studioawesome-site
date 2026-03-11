@@ -80,27 +80,36 @@
       });
     });
 
-    // Load thumbnails from Vimeo oembed
+    // Load thumbnails + aspect ratio from Vimeo oembed
+    var vimeoData = {};
     document.querySelectorAll('.sa-lazy-video').forEach(function(frame) {
       var id = frame.getAttribute('data-vimeo');
       fetch('https://vimeo.com/api/oembed.json?url=https://vimeo.com/' + id)
         .then(function(r) { return r.json(); })
         .then(function(data) {
+          vimeoData[id] = data;
           if (data.thumbnail_url) {
-            // Use the larger version of the thumbnail
             var thumb = data.thumbnail_url.replace(/_\d+x\d+/, '_1280');
             frame.style.backgroundImage = 'url(' + thumb + ')';
             frame.style.backgroundSize = 'cover';
             frame.style.backgroundPosition = 'center';
           }
+          // Fix aspect ratio for non-16:9 videos (e.g. portrait/vertical)
+          if (data.width && data.height) {
+            var ratio = (data.height / data.width * 100).toFixed(4) + '%';
+            // Override the ::before padding via a custom property
+            frame.style.setProperty('--video-ratio', ratio);
+          }
         })
-        .catch(function() {}); // fail silently
+        .catch(function() {});
     });
 
     // Tap to inject iframe (iOS-safe: created synchronously inside user gesture)
     document.querySelectorAll('.sa-lazy-video').forEach(function(frame) {
       frame.addEventListener('click', function() {
         var id = frame.getAttribute('data-vimeo');
+        // Clear thumbnail
+        frame.style.backgroundImage = '';
         var iframe = document.createElement('iframe');
         iframe.src = 'https://player.vimeo.com/video/' + id + '?title=0&byline=0&portrait=0&badge=0&autoplay=1';
         iframe.setAttribute('frameborder', '0');

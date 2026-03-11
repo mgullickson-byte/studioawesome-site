@@ -605,7 +605,7 @@ a {
 .sa-video-frame::before {
   content: "";
   display: block;
-  padding-top: 56.25%;
+  padding-top: var(--video-ratio, 56.25%);
 }
 
 .sa-video-frame iframe {
