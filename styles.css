@@ -705,6 +705,11 @@ a {
   object-fit: cover;
 }
 
+/* Argyle map: shift right to show building front on Argyle Ave */
+.sa-argyle-map {
+  object-position: 20% center;
+}
+
 /* Animation & ADR tiles */
 .sa-grid-animation {
   align-items: stretch;
