@@ -175,8 +175,10 @@ a {
 /* Main */
 .sa-main {
   max-width: 1120px;
+  width: 100%;
   margin: 0 auto 80px;
   padding: 0 20px 80px;
+  flex: 1;
 }
 
 /* Hero */
