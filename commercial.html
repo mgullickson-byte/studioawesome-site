@@ -105,9 +105,7 @@
           }
           // Fix aspect ratio for non-16:9 videos (e.g. portrait/vertical)
           if (data.width && data.height) {
-            var ratio = (data.height / data.width * 100).toFixed(4) + '%';
-            // Override the ::before padding via a custom property
-            frame.style.setProperty('--video-ratio', ratio);
+            frame.style.aspectRatio = data.width + ' / ' + data.height;
           }
         })
         .catch(function() {});
