@@ -509,6 +509,8 @@ a {
   color: var(--sa-text);
   text-decoration: none;
   transition: background 0.15s ease;
+  width: 200px;
+  margin: 0 auto;
 }
 
 .sa-map-btn img {
