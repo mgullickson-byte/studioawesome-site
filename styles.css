@@ -492,6 +492,12 @@ a {
   height: 100%;
 }
 
+/* Flush section (no top margin) */
+.sa-section-flush {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
 /* Select Casting portal */
 .sa-casting-portal {
   position: relative;
