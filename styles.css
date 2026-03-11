@@ -236,7 +236,8 @@ a {
 @media (max-width: 768px) {
   .sa-hero {
     padding: 0;
-    justify-content: center;
+    align-items: center;
+    padding-bottom: 20vh;
   }
 
   .sa-contact-hero {
