@@ -232,6 +232,17 @@ a {
   padding-top: 60px;
 }
 
+@media (max-width: 768px) {
+  .sa-hero {
+    align-items: flex-start;
+    padding-top: 48px;
+  }
+
+  .sa-contact-hero {
+    padding-top: 100px;
+  }
+}
+
 .sa-contact-hero-info {
   font-size: 1.1rem;
   color: var(--sa-text);
