@@ -42,7 +42,7 @@
               <img src="assets/argyle-map-thumb.jpg" alt="1608 Argyle parking map" />
             </div>
             <p class="sa-contact-line">
-              <a href="https://www.google.com/maps?q=1608+Argyle+Ave,+Los+Angeles,+CA+90028" target="_blank" rel="noopener">
+              <a href="#" class="sa-map-link" data-address="1608 Argyle Ave, Los Angeles, CA 90028" data-query="1608+Argyle+Ave,+Los+Angeles,+CA+90028">
                 1608 Argyle Ave, Los Angeles, CA 90028
               </a>
             </p>
@@ -55,7 +55,7 @@
               <img src="assets/western-map-thumb.jpg" alt="1838 N Western Ave parking map" />
             </div>
             <p class="sa-contact-line">
-              <a href="https://www.google.com/maps?q=1838+N+Western+Ave,+Los+Angeles,+CA+90027" target="_blank" rel="noopener">
+              <a href="#" class="sa-map-link" data-address="1838 N Western Ave, Los Angeles, CA 90027" data-query="1838+N+Western+Ave,+Los+Angeles,+CA+90027">
                 1838 N Western Ave, Los Angeles, CA 90027
               </a>
             </p>
@@ -68,12 +68,53 @@
     </section>
   </main>
 
+  <!-- Map chooser modal -->
+  <div id="sa-map-modal" class="sa-map-modal" role="dialog" aria-modal="true" aria-label="Open in maps">
+    <div class="sa-map-modal-box">
+      <p class="sa-map-modal-title" id="sa-map-modal-title"></p>
+      <div class="sa-map-modal-btns">
+        <a id="sa-map-apple" href="#" target="_blank" class="sa-map-btn">🍎 Apple Maps</a>
+        <a id="sa-map-google" href="#" target="_blank" class="sa-map-btn">🗺 Google Maps</a>
+        <a id="sa-map-waze" href="#" target="_blank" class="sa-map-btn">🔵 Waze</a>
+      </div>
+      <button class="sa-map-cancel" id="sa-map-cancel">Cancel</button>
+    </div>
+  </div>
+
   <footer class="sa-footer">
     <p>© <span id="year"></span> Studio Awesome. All rights reserved.</p>
   </footer>
 
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Map chooser
+    var modal = document.getElementById('sa-map-modal');
+    var modalTitle = document.getElementById('sa-map-modal-title');
+    var appleBtn = document.getElementById('sa-map-apple');
+    var googleBtn = document.getElementById('sa-map-google');
+    var wazeBtn = document.getElementById('sa-map-waze');
+
+    document.querySelectorAll('.sa-map-link').forEach(function(link) {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        var addr = link.getAttribute('data-address');
+        var q = link.getAttribute('data-query');
+        modalTitle.textContent = addr;
+        appleBtn.href = 'maps://?q=' + q;
+        googleBtn.href = 'https://maps.google.com/?q=' + q;
+        wazeBtn.href = 'https://waze.com/ul?q=' + q + '&navigate=yes';
+        modal.classList.add('sa-map-modal-open');
+      });
+    });
+
+    document.getElementById('sa-map-cancel').addEventListener('click', function() {
+      modal.classList.remove('sa-map-modal-open');
+    });
+
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) modal.classList.remove('sa-map-modal-open');
+    });
   </script>
 <script>
   document.getElementById("sa-hamburger").addEventListener("click", function() {
