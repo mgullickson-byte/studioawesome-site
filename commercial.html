@@ -37,27 +37,23 @@
       </div>
       <div id="commercial-videos" class="sa-grid sa-grid-2">
         <div class="sa-panel">
-          <div class="sa-video-wrap">
-            <iframe class="sa-video-iframe" src="https://player.vimeo.com/video/1171948863?title=0&amp;byline=0&amp;portrait=0&amp;badge=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="Commercial Spot 1"></iframe>
-            <div class="sa-video-overlay"><button class="sa-play-btn" aria-label="Play">&#9654;</button><button class="sa-restart-btn" aria-label="Restart">&#8635;</button></div>
+          <div class="sa-video-frame">
+            <iframe src="https://player.vimeo.com/video/1171948863?title=0&amp;byline=0&amp;portrait=0&amp;badge=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="Commercial Spot 1"></iframe>
           </div>
         </div>
         <div class="sa-panel">
-          <div class="sa-video-wrap">
-            <iframe class="sa-video-iframe" src="https://player.vimeo.com/video/1171948757?title=0&amp;byline=0&amp;portrait=0&amp;badge=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="Commercial Spot 2"></iframe>
-            <div class="sa-video-overlay"><button class="sa-play-btn" aria-label="Play">&#9654;</button><button class="sa-restart-btn" aria-label="Restart">&#8635;</button></div>
+          <div class="sa-video-frame">
+            <iframe src="https://player.vimeo.com/video/1171948757?title=0&amp;byline=0&amp;portrait=0&amp;badge=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="Commercial Spot 2"></iframe>
           </div>
         </div>
         <div class="sa-panel">
-          <div class="sa-video-wrap">
-            <iframe class="sa-video-iframe" src="https://player.vimeo.com/video/1171948615?title=0&amp;byline=0&amp;portrait=0&amp;badge=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="Commercial Spot 3"></iframe>
-            <div class="sa-video-overlay"><button class="sa-play-btn" aria-label="Play">&#9654;</button><button class="sa-restart-btn" aria-label="Restart">&#8635;</button></div>
+          <div class="sa-video-frame">
+            <iframe src="https://player.vimeo.com/video/1171948615?title=0&amp;byline=0&amp;portrait=0&amp;badge=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="Commercial Spot 3"></iframe>
           </div>
         </div>
         <div class="sa-panel">
-          <div class="sa-video-wrap">
-            <iframe class="sa-video-iframe" src="https://player.vimeo.com/video/1171948564?title=0&amp;byline=0&amp;portrait=0&amp;badge=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="Commercial Spot 4"></iframe>
-            <div class="sa-video-overlay"><button class="sa-play-btn" aria-label="Play">&#9654;</button><button class="sa-restart-btn" aria-label="Restart">&#8635;</button></div>
+          <div class="sa-video-frame">
+            <iframe src="https://player.vimeo.com/video/1171948564?title=0&amp;byline=0&amp;portrait=0&amp;badge=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="Commercial Spot 4"></iframe>
           </div>
         </div>
       </div>
@@ -71,11 +67,8 @@
     <p>© <span id="year"></span> Studio Awesome. All rights reserved.</p>
   </footer>
 
-  <script src="https://player.vimeo.com/api/player.js"></script>
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
-
-    // Show/hide toggle
     document.querySelectorAll('.sa-show-toggle').forEach(function (btn) {
       btn.addEventListener('click', function () {
         var targetId = btn.getAttribute('data-target');
@@ -85,57 +78,11 @@
         btn.textContent = expanded ? '− Show less' : '+ Show more';
       });
     });
-
-    // Custom play/pause/restart overlay
-    document.querySelectorAll('.sa-video-wrap').forEach(function (wrap) {
-      var iframe = wrap.querySelector('.sa-video-iframe');
-      var overlay = wrap.querySelector('.sa-video-overlay');
-      var playBtn = wrap.querySelector('.sa-play-btn');
-      var restartBtn = wrap.querySelector('.sa-restart-btn');
-      var player = new Vimeo.Player(iframe);
-      var playing = false;
-
-      playBtn.addEventListener('click', function () {
-        if (playing) {
-          player.pause();
-        } else {
-          player.play();
-        }
-      });
-
-      restartBtn.addEventListener('click', function () {
-        player.setCurrentTime(0).then(function () {
-          player.play();
-        });
-      });
-
-      player.on('play', function () {
-        playing = true;
-        playBtn.innerHTML = '&#9646;&#9646;';
-        overlay.classList.add('sa-video-playing');
-        overlay.classList.remove('sa-video-ended');
-        // Enable overlay controls after first play (iOS audio unlock)
-        wrap.classList.add('sa-video-started');
-      });
-
-      player.on('pause', function () {
-        playing = false;
-        playBtn.innerHTML = '&#9654;';
-        overlay.classList.remove('sa-video-playing');
-      });
-
-      player.on('ended', function () {
-        playing = false;
-        playBtn.innerHTML = '&#9654;';
-        overlay.classList.remove('sa-video-playing');
-        overlay.classList.add('sa-video-ended');
-      });
+  </script>
+  <script>
+    document.getElementById("sa-hamburger").addEventListener("click", function() {
+      document.querySelector(".sa-nav").classList.toggle("sa-nav-open");
     });
   </script>
-<script>
-  document.getElementById("sa-hamburger").addEventListener("click", function() {
-    document.querySelector(".sa-nav").classList.toggle("sa-nav-open");
-  });
-</script>
 </body>
 </html>
