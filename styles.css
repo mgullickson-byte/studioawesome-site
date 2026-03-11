@@ -228,6 +228,8 @@ a {
 /* Contact / Let's Talk page hero */
 .sa-contact-hero {
   min-height: calc(100vh - 120px);
+  align-items: flex-start;
+  padding-top: 60px;
 }
 
 .sa-contact-hero-info {
