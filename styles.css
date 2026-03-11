@@ -498,15 +498,21 @@ a {
 }
 
 .sa-map-btn {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   padding: 14px 16px;
   background: var(--sa-bg-soft);
   border-radius: var(--sa-radius-md);
-  text-align: center;
   font-size: 0.95rem;
   color: var(--sa-text);
   text-decoration: none;
   transition: background 0.15s ease;
+}
+
+.sa-map-btn img {
+  flex-shrink: 0;
 }
 
 .sa-map-btn:hover {
