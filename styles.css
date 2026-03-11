@@ -502,15 +502,16 @@ a {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  padding: 14px 16px;
-  background: var(--sa-bg-soft);
-  border-radius: var(--sa-radius-md);
+  padding: 13px 20px;
+  background: #fff;
+  border-radius: 999px;
   font-size: 0.95rem;
-  color: var(--sa-text);
+  color: #111;
   text-decoration: none;
-  transition: background 0.15s ease;
+  transition: background 0.15s ease, color 0.15s ease;
   width: 200px;
   margin: 0 auto;
+  font-weight: 600;
 }
 
 .sa-map-btn img {
