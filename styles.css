@@ -235,7 +235,7 @@ a {
 
 @media (max-width: 768px) {
   .sa-hero {
-    padding: 0 0 12vh 0;
+    padding: 0;
     align-items: center;
   }
 
