@@ -114,6 +114,8 @@
         playBtn.innerHTML = '&#9646;&#9646;';
         overlay.classList.add('sa-video-playing');
         overlay.classList.remove('sa-video-ended');
+        // Enable overlay controls after first play (iOS audio unlock)
+        wrap.classList.add('sa-video-started');
       });
 
       player.on('pause', function () {

@@ -393,6 +393,12 @@ a {
   transition: background 0.2s ease;
   border-radius: var(--sa-radius-md);
   cursor: pointer;
+  pointer-events: none; /* let first tap hit iframe directly for iOS audio */
+}
+
+/* Re-enable overlay interaction once video has started */
+.sa-video-started .sa-video-overlay {
+  pointer-events: auto;
 }
 
 .sa-video-overlay:hover {
