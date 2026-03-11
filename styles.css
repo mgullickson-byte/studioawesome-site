@@ -448,6 +448,45 @@ a {
   color: var(--sa-text);
 }
 
+/* Lazy-load video thumbnails */
+.sa-lazy-video {
+  position: relative;
+  cursor: pointer;
+}
+
+.sa-lazy-thumb {
+  position: absolute;
+  inset: 0;
+  background: #111 center/cover no-repeat;
+  border-radius: inherit;
+}
+
+.sa-lazy-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.6);
+  border: 2px solid rgba(255,255,255,0.8);
+  color: #fff;
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+  padding-left: 4px;
+}
+
+.sa-lazy-video:hover .sa-lazy-play {
+  background: rgba(0,0,0,0.85);
+  transform: translate(-50%, -50%) scale(1.08);
+}
+
 /* People grid: force 2 x 2 equal-height pills */
 .sa-people-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
