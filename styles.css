@@ -388,12 +388,7 @@ a {
   transition: background 0.2s ease;
   border-radius: var(--sa-radius-md);
   cursor: pointer;
-  pointer-events: none; /* let first tap hit iframe directly for iOS audio */
-}
-
-/* Re-enable overlay interaction once video has started */
-.sa-video-started .sa-video-overlay {
-  pointer-events: auto;
+  pointer-events: none; /* overlay is visual only; buttons handle interaction */
 }
 
 .sa-video-overlay:hover {
@@ -421,6 +416,7 @@ a {
   align-items: center;
   justify-content: center;
   transition: opacity 0.2s ease, background 0.2s ease;
+  pointer-events: auto;
 }
 
 .sa-play-btn:hover {
@@ -442,6 +438,7 @@ a {
   margin-left: 12px;
   opacity: 0;
   transition: opacity 0.2s ease, background 0.2s ease;
+  pointer-events: auto;
 }
 
 .sa-restart-btn:hover {
