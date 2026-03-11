@@ -492,6 +492,29 @@ a {
   height: 100%;
 }
 
+/* Select Casting portal */
+.sa-casting-portal {
+  position: relative;
+  width: 100%;
+  border-radius: var(--sa-radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--sa-border-subtle);
+  background: #fff;
+}
+
+.sa-casting-iframe {
+  width: 100%;
+  height: 80vh;
+  border: none;
+  display: block;
+}
+
+.sa-casting-fallback {
+  padding: 16px;
+  text-align: center;
+  background: var(--sa-bg-elevated);
+}
+
 /* People grid: force 2 x 2 equal-height pills */
 .sa-people-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
