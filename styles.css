@@ -843,12 +843,13 @@ a {
 
 /* Footer */
 .sa-footer {
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  padding: 18px 20px 28px;
+  border-top: none;
+  padding: 12px 20px;
   text-align: center;
-  font-size: 0.8rem;
-  color: var(--sa-muted);
-  background: #050509;
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0.2);
+  background: transparent;
+  letter-spacing: 0.04em;
 }
 
 /* Responsive */
