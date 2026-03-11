@@ -15,6 +15,7 @@
       <a href="index.html" class="sa-logo">
         <img src="assets/logo.png" alt="Studio Awesome" />
       </a>
+      <button class="sa-hamburger" id="sa-hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
       <nav class="sa-nav">
         <a href="commercial.html">Commercial</a>
         <a href="adr.html">ADR</a>
@@ -65,5 +66,10 @@
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
   </script>
+<script>
+  document.getElementById("sa-hamburger").addEventListener("click", function() {
+    document.querySelector(".sa-nav").classList.toggle("sa-nav-open");
+  });
+</script>
 </body>
 </html>

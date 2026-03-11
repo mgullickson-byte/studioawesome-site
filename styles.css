@@ -102,6 +102,71 @@ a {
   border-color: rgba(255, 255, 255, 0.12);
 }
 
+.sa-nav a.sa-nav-active {
+  color: var(--sa-text);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Hamburger button */
+.sa-hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  z-index: 20;
+}
+
+.sa-hamburger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--sa-text);
+  border-radius: 2px;
+  transition: all 0.2s ease;
+}
+
+/* Mobile nav */
+@media (max-width: 768px) {
+  .sa-hamburger {
+    display: flex;
+  }
+
+  .sa-nav {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(5, 5, 9, 0.98);
+    padding: 16px 20px 24px;
+    gap: 0;
+    border-top: 1px solid var(--sa-border-subtle);
+    z-index: 100;
+  }
+
+  .sa-nav.sa-nav-open {
+    display: flex;
+  }
+
+  .sa-nav a {
+    padding: 12px 0;
+    font-size: 0.9rem;
+    border-bottom: 1px solid var(--sa-border-subtle);
+  }
+
+  .sa-nav a:last-child {
+    border-bottom: none;
+  }
+
+  .sa-header-inner {
+    position: relative;
+  }
+}
+
 /* (header CTA pill removed; using standard nav link for Lets Talk) */
 
 /* Main */
