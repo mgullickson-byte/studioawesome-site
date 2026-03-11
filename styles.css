@@ -28,6 +28,8 @@ body {
 
 body {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   position: relative;
 }
 
@@ -850,6 +852,7 @@ a {
   color: rgba(255,255,255,0.2);
   background: transparent;
   letter-spacing: 0.04em;
+  margin-top: auto;
 }
 
 /* Responsive */
