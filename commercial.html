@@ -38,25 +38,21 @@
       <div id="commercial-videos" class="sa-grid sa-grid-2">
         <div class="sa-panel">
           <div class="sa-video-frame sa-lazy-video" data-vimeo="1171948863">
-            <div class="sa-lazy-thumb"></div>
             <button class="sa-lazy-play" aria-label="Play">&#9654;</button>
           </div>
         </div>
         <div class="sa-panel">
           <div class="sa-video-frame sa-lazy-video" data-vimeo="1171948757">
-            <div class="sa-lazy-thumb"></div>
             <button class="sa-lazy-play" aria-label="Play">&#9654;</button>
           </div>
         </div>
         <div class="sa-panel">
           <div class="sa-video-frame sa-lazy-video" data-vimeo="1171948615">
-            <div class="sa-lazy-thumb"></div>
             <button class="sa-lazy-play" aria-label="Play">&#9654;</button>
           </div>
         </div>
         <div class="sa-panel">
           <div class="sa-video-frame sa-lazy-video" data-vimeo="1171948564">
-            <div class="sa-lazy-thumb"></div>
             <button class="sa-lazy-play" aria-label="Play">&#9654;</button>
           </div>
         </div>
@@ -74,7 +70,6 @@
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Show/hide toggle
     document.querySelectorAll('.sa-show-toggle').forEach(function(btn) {
       btn.addEventListener('click', function() {
         var targetId = btn.getAttribute('data-target');
@@ -85,32 +80,17 @@
       });
     });
 
-    // Load Vimeo thumbnails
-    document.querySelectorAll('.sa-lazy-video').forEach(function(wrap) {
-      var id = wrap.getAttribute('data-vimeo');
-      var thumb = wrap.querySelector('.sa-lazy-thumb');
-      fetch('https://vimeo.com/api/oembed.json?url=https://vimeo.com/' + id)
-        .then(function(r) { return r.json(); })
-        .then(function(data) {
-          if (data.thumbnail_url) {
-            thumb.style.backgroundImage = 'url(' + data.thumbnail_url + ')';
-          }
-        });
-    });
-
-    // Tap to load and play (iOS-safe: iframe created inside user gesture)
-    document.querySelectorAll('.sa-lazy-video').forEach(function(wrap) {
-      wrap.addEventListener('click', function() {
-        var id = wrap.getAttribute('data-vimeo');
+    // Tap to inject iframe (iOS-safe: created synchronously inside user gesture)
+    document.querySelectorAll('.sa-lazy-video').forEach(function(frame) {
+      frame.addEventListener('click', function() {
+        var id = frame.getAttribute('data-vimeo');
         var iframe = document.createElement('iframe');
         iframe.src = 'https://player.vimeo.com/video/' + id + '?title=0&byline=0&portrait=0&badge=0&autoplay=1';
         iframe.setAttribute('frameborder', '0');
         iframe.setAttribute('allow', 'autoplay; fullscreen; picture-in-picture');
         iframe.setAttribute('allowfullscreen', '');
-        iframe.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;border-radius:inherit;';
-        // Clear placeholder content and insert iframe
-        wrap.innerHTML = '';
-        wrap.appendChild(iframe);
+        frame.innerHTML = '';
+        frame.appendChild(iframe);
       });
     });
   </script>
