@@ -80,6 +80,23 @@
       });
     });
 
+    // Load thumbnails from Vimeo oembed
+    document.querySelectorAll('.sa-lazy-video').forEach(function(frame) {
+      var id = frame.getAttribute('data-vimeo');
+      fetch('https://vimeo.com/api/oembed.json?url=https://vimeo.com/' + id)
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (data.thumbnail_url) {
+            // Use the larger version of the thumbnail
+            var thumb = data.thumbnail_url.replace(/_\d+x\d+/, '_1280');
+            frame.style.backgroundImage = 'url(' + thumb + ')';
+            frame.style.backgroundSize = 'cover';
+            frame.style.backgroundPosition = 'center';
+          }
+        })
+        .catch(function() {}); // fail silently
+    });
+
     // Tap to inject iframe (iOS-safe: created synchronously inside user gesture)
     document.querySelectorAll('.sa-lazy-video').forEach(function(frame) {
       frame.addEventListener('click', function() {
