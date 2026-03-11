@@ -234,8 +234,14 @@ a {
 }
 
 @media (max-width: 768px) {
+  .sa-hero {
+    padding: 0;
+    justify-content: center;
+  }
+
   .sa-contact-hero {
     padding-top: 100px;
+    justify-content: flex-start;
   }
 }
 
