@@ -157,13 +157,18 @@
             frame.style.backgroundImage = 'url(' + thumb + ')';
             frame.style.backgroundSize = 'cover';
             frame.style.backgroundPosition = 'center';
+          } else {
+            frame.style.background = 'linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%)';
           }
           // Fix aspect ratio for non-16:9 videos (e.g. portrait/vertical)
           if (data.width && data.height) {
             frame.style.aspectRatio = data.width + ' / ' + data.height;
           }
         })
-        .catch(function() {});
+        .catch(function() {
+          // Private video — show branded gradient placeholder instead of black
+          frame.style.background = 'linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%)';
+        });
     });
 
     // Tap to inject iframe (iOS-safe: created synchronously inside user gesture)
