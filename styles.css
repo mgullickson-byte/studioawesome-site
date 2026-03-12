@@ -713,7 +713,7 @@ a {
   border: none;
   overflow: hidden;
   background: #050505;
-  height: 100%;
+  aspect-ratio: 16 / 10;
 }
 
 .sa-photo-placeholder img {
