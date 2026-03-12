@@ -731,10 +731,7 @@ a {
   height: 340px;
 }
 
-/* Control room — show top of image (Atmos speakers) */
-#voiceover .sa-photo-placeholder img[alt="Control Room"] {
-  object-position: top;
-}
+
 
 .sa-photo-caption {
   margin: 10px 0 0;
