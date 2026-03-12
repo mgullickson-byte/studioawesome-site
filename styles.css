@@ -640,9 +640,9 @@ a {
 /* Video */
 .sa-video-frame {
   position: relative;
-  border-radius: var(--sa-radius-md);
+  border-radius: 0;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: none;
   background: #000;
   aspect-ratio: 16 / 9;
   width: 100%;
