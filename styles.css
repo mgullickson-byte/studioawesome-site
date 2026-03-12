@@ -729,8 +729,8 @@ a {
 .sa-vo-photo-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: var(--sa-gap);
-  margin-bottom: var(--sa-gap);
+  gap: 12px;
+  margin-bottom: 24px;
 }
 
 .sa-vo-photo-tile {
