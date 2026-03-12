@@ -725,11 +725,7 @@ a {
   display: block;
 }
 
-/* Voiceover photo gallery — fixed height so all tiles are uniform */
-#voiceover .sa-photo-placeholder {
-  flex: none;
-  height: 340px;
-}
+
 
 
 
