@@ -703,7 +703,8 @@ a {
 
 /* ADR Photos */
 .sa-panel-photo {
-  display: block;
+  display: flex;
+  flex-direction: column;
   padding: 0;
 }
 
@@ -712,7 +713,8 @@ a {
   border: none;
   overflow: hidden;
   background: #050505;
-  height: 260px;
+  flex: 1;
+  min-height: 200px;
 }
 
 .sa-photo-placeholder img {
@@ -721,6 +723,12 @@ a {
   object-fit: cover;
   object-position: center;
   display: block;
+}
+
+/* Voiceover photo gallery — fixed height so all tiles are uniform */
+#voiceover .sa-photo-placeholder {
+  flex: none;
+  height: 260px;
 }
 
 .sa-photo-caption {
