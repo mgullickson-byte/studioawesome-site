@@ -725,10 +725,11 @@ a {
   display: block;
 }
 
-/* Voiceover photo gallery — square tiles on desktop */
+/* Voiceover photo gallery — square tiles (bulletproof padding-top trick) */
 #voiceover .sa-photo-placeholder {
   width: 100%;
-  aspect-ratio: 1 / 1;
+  padding-top: 100%;
+  height: 0;
   position: relative;
   flex: none;
   min-height: unset;
@@ -741,12 +742,6 @@ a {
   height: 100%;
   object-fit: cover;
   object-position: center;
-}
-
-@media (max-width: 768px) {
-  #voiceover .sa-photo-placeholder {
-    aspect-ratio: 4 / 3;
-  }
 }
 
 
