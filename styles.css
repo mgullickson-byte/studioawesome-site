@@ -725,23 +725,31 @@ a {
   display: block;
 }
 
-/* Voiceover photo gallery — square tiles (bulletproof padding-top trick) */
-#voiceover .sa-photo-placeholder {
-  width: 100%;
-  padding-top: 100%;
-  height: 0;
-  position: relative;
-  flex: none;
-  min-height: unset;
+/* Voiceover photo gallery — dedicated square grid, no shared class conflicts */
+.sa-vo-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--sa-gap);
+  margin-bottom: var(--sa-gap);
 }
 
-#voiceover .sa-photo-placeholder img {
+.sa-vo-photo-tile {
+  position: relative;
+  width: 100%;
+  padding-top: 100%;
+  overflow: hidden;
+  border-radius: var(--sa-radius-lg);
+  background: #050505;
+}
+
+.sa-vo-photo-tile img {
   position: absolute;
-  top: 0; left: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center;
+  display: block;
 }
 
 
