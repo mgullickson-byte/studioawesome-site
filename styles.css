@@ -799,7 +799,7 @@ a {
   background: #050505;
   overflow: hidden;
   margin-bottom: 8px;
-  height: 170px;
+  aspect-ratio: 2/3;
 }
 
 .sa-show-image img {
@@ -900,6 +900,11 @@ a {
   .sa-grid-2,
   .sa-grid-3 {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  #adr-shows,
+  #animation-shows {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   /* On mobile, keep Commercial videos stacked 1-up */
