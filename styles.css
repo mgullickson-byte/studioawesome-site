@@ -706,6 +706,7 @@ a {
   display: flex;
   flex-direction: column;
   padding: 0;
+  height: 260px;
 }
 
 .sa-photo-placeholder {
@@ -713,7 +714,8 @@ a {
   border: none;
   overflow: hidden;
   background: #050505;
-  aspect-ratio: 16 / 10;
+  flex: 1;
+  height: 0;
 }
 
 .sa-photo-placeholder img {
