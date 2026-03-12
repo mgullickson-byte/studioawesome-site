@@ -725,8 +725,18 @@ a {
   display: block;
 }
 
+/* Voiceover photo gallery — square tiles on desktop */
+#voiceover .sa-photo-placeholder {
+  aspect-ratio: 1 / 1;
+  flex: none;
+  min-height: unset;
+}
 
-
+@media (max-width: 768px) {
+  #voiceover .sa-photo-placeholder {
+    aspect-ratio: 4 / 3;
+  }
+}
 
 
 .sa-photo-caption {
