@@ -655,6 +655,19 @@ a {
   height: 100%;
 }
 
+/* ADR/Animation credits section label */
+.sa-credits-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--sa-muted);
+  text-transform: uppercase;
+  margin-top: 2.5rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--sa-border-subtle);
+}
+
 /* ADR Photos */
 .sa-panel-photo {
   display: flex;
