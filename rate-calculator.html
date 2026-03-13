@@ -295,10 +295,10 @@
   <main>
     <div class="calc-wrap">
       <h1>VO Rate Calculator</h1>
-      <p class="calc-subtitle">Compare SAG-AFTRA union scale against real-world non-union market rates — sourced from thousands of actual productions on Select Casting.</p>
+      <p class="calc-subtitle" id="page-subtitle">Compare SAG-AFTRA union scale against real-world non-union market rates — sourced from thousands of actual productions on Select Casting.</p>
 
-      <!-- Union / Non-Union / Both toggle -->
-      <div style="display:flex;gap:0;margin-bottom:28px;border:1px solid #222;border-radius:10px;overflow:hidden;width:fit-content;">
+      <!-- Union / Non-Union / Both toggle — hidden in SAG-only mode -->
+      <div id="union-toggle-bar" style="display:flex;gap:0;margin-bottom:28px;border:1px solid #222;border-radius:10px;overflow:hidden;width:fit-content;">
         <button id="toggle-sag"  onclick="setUnionMode('union')"     class="union-toggle">Union</button>
         <button id="toggle-nu"   onclick="setUnionMode('non-union')" class="union-toggle" style="border-left:1px solid #222;border-right:1px solid #222;">Non-Union</button>
         <button id="toggle-both" onclick="setUnionMode('both')"      class="union-toggle">Both</button>
@@ -707,9 +707,14 @@
 
     // ─── UNION MODE TOGGLE ───────────────────────────────────────
 
-    let unionMode = 'non-union'; // 'non-union' | 'union' | 'both'
+    // ?union=1 → SAG-only mode (hide non-union, lock toggle)
+    const urlParams = new URLSearchParams(window.location.search);
+    const sagOnlyMode = urlParams.get('union') === '1';
+
+    let unionMode = sagOnlyMode ? 'union' : 'non-union';
 
     function setUnionMode(mode) {
+      if (sagOnlyMode && mode !== 'union') return;
       unionMode = mode;
       ['nu','both','sag'].forEach(id => document.getElementById('toggle-' + id)?.classList.remove('active-toggle'));
       const map = { 'non-union': 'nu', 'both': 'both', 'union': 'sag' };
@@ -1108,9 +1113,18 @@
       document.getElementById('proj-sag-total').textContent = fmt(sagFinal);
     }
 
-    // Patch calculate() to capture last spot values
     // Init
     onCategoryChange();
+
+    // SAG-only mode init (?union=1)
+    if (sagOnlyMode) {
+      document.getElementById('union-toggle-bar').style.display = 'none';
+      document.getElementById('page-subtitle').textContent = 'SAG-AFTRA union scale rates — 2025 Commercials Contract.';
+      document.title = 'SAG-AFTRA VO Rate Reference — Studio Awesome';
+      setUnionMode('union');
+    } else {
+      setUnionMode('non-union');
+    }
 
 
   </script>
