@@ -1121,6 +1121,8 @@
       document.getElementById('union-toggle-bar').style.display = 'none';
       document.getElementById('page-subtitle').textContent = 'SAG-AFTRA union scale rates — 2025 Commercials Contract.';
       document.title = 'SAG-AFTRA VO Rate Reference — Studio Awesome';
+      const scSection = document.getElementById('sc-data-section');
+      if (scSection) scSection.style.display = 'none';
       setUnionMode('union');
     } else {
       setUnionMode('non-union');
