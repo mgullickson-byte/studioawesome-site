@@ -806,20 +806,19 @@
 
       // ── RADIO ─────────────────────────────────────────────────
       if (cat === 'radio') {
-        // Market Rate (SC data, GVAA-floored)
-        let scBase = SC_RADIO[radioMarket] || 550;
-        if (spot === '15') scBase = Math.round(scBase * 0.7);
-        if (radioRun === '26wk' || radioRun === '52wk') scBase = Math.round(scBase * 1.5);
-        const scSession = SC_SESSION;
-        const scUsageOnly = scBase;
-        window._nuUsage = scUsageOnly;
-        const scAgent = Math.round((scSession + scUsageOnly) * AGENT_NONUNION);
-        const scTotal = scSession + scUsageOnly + scAgent;
-        gvaaHTML = rl('Session Fee', fmtInt(scSession));
-        gvaaHTML += rl('Usage / Buyout', fmtInt(scUsageOnly));
-        gvaaHTML += rl('Agent Fee (20%)', fmtInt(scAgent));
+        // GVAA rates — all-in (session included); SC data cannot distinguish market tiers
+        let gvaaBase = SC_RADIO[radioMarket] || 350;
+        if (spot === '15') gvaaBase = Math.round(gvaaBase * 0.7);
+        if (radioRun === '26wk' || radioRun === '52wk') gvaaBase = Math.round(gvaaBase * 1.5);
+        window._nuUsage = gvaaBase;
+        window._nuSessionIncluded = true; // GVAA rate is all-in, no separate session fee
+        const gvaaAgent = Math.round(gvaaBase * AGENT_NONUNION);
+        const gvaaTotal = gvaaBase + gvaaAgent;
+        gvaaHTML = rl('Talent Fee (GVAA)', fmtInt(gvaaBase));
+        gvaaHTML += rl('Agent Fee (20%)', fmtInt(gvaaAgent));
+        gvaaHTML += rl('Session included in rate', '✓', false, true);
         gvaaHTML += rl('No H&R required', '✓ Non-union', false, true);
-        gvaaHTML += totalBlock('Total Talent Cost', fmtInt(scTotal), false);
+        gvaaHTML += totalBlock('Total Talent Cost', fmtInt(gvaaTotal), false);
 
         // SAG
         let sagBase = null;
@@ -984,7 +983,13 @@
       el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
       // Store and render project total automatically
-      window._lastSpotData = { label: heading, nuUsage: window._nuUsage || 0, nuSession: SC_SESSION, sagBaseTotal: window._sagBaseTotal || 0 };
+      window._lastSpotData = {
+        label: heading,
+        nuUsage: window._nuUsage || 0,
+        sessionIncluded: window._nuSessionIncluded || false, // true = session already in rate (GVAA radio)
+        sagBaseTotal: window._sagBaseTotal || 0
+      };
+      window._nuSessionIncluded = false; // reset
       renderProjectPanel();
     }
 
@@ -1071,19 +1076,24 @@
         </div>`;
       }
 
-      // Session fee — paid once for all
-      rows += `<div class="project-spot-row" style="margin-top:8px;border-top:1px solid #222;padding-top:12px;">
-        <span class="project-spot-label" style="color:#888;">Session fee <span style="font-size:0.75rem;color:#555;">(one session covers all versions)</span></span>
-        <span class="project-spot-nu" style="color:#888;">${fmtInt(SC_SESSION)}</span>
-        <span class="project-spot-sag" style="color:#5b9bd5;opacity:0.7;">${fmtInt(SAG_TV_SESSION)}</span>
-      </div>`;
+      // Session fee — only shown separately if not already included in the rate
+      const sessionIncluded = d.sessionIncluded || false;
+      if (!sessionIncluded) {
+        rows += `<div class="project-spot-row" style="margin-top:8px;border-top:1px solid #222;padding-top:12px;">
+          <span class="project-spot-label" style="color:#888;">Session fee <span style="font-size:0.75rem;color:#555;">(one session covers all versions)</span></span>
+          <span class="project-spot-nu" style="color:#888;">${fmtInt(SC_SESSION)}</span>
+          <span class="project-spot-sag" style="color:#5b9bd5;opacity:0.7;">${fmtInt(SAG_TV_SESSION)}</span>
+        </div>`;
+      }
 
       document.getElementById('project-lines').innerHTML = rows;
 
-      // Grand totals
-      const nuGrand  = SC_SESSION + nuUsageTotal;
+      // Grand totals — session already in nuUsageTotal for GVAA radio; add separately for SC-based categories
+      const nuSessionAdd = sessionIncluded ? 0 : SC_SESSION;
+      const nuGrand  = nuSessionAdd + nuUsageTotal;
       const nuFinal  = nuGrand + Math.round(nuGrand * AGENT_NONUNION);
-      const sagGrand = SAG_TV_SESSION + sagUsageTotal;
+      const sagSessionAdd = sessionIncluded ? 0 : SAG_TV_SESSION;
+      const sagGrand = sagSessionAdd + sagUsageTotal;
       const sagFinal = sagGrand * (1 + AGENT_UNION + HR_RATE);
 
       document.getElementById('proj-nu-total').textContent  = fmtInt(nuFinal);
