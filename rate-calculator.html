@@ -185,6 +185,34 @@
     .no-rate { color: #555; font-style: italic; font-size: 0.85rem; padding: 8px 0; }
 
     .field-hidden { display: none !important; }
+
+    .add-spot-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #1a1a1a;
+      flex-wrap: wrap;
+    }
+    .project-spot-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 10px 0;
+      border-bottom: 1px solid #111;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .project-spot-label { font-size: 0.85rem; color: #888; flex: 1; }
+    .project-spot-lift { font-size: 0.72rem; color: #5cff9c; margin-left: 6px; }
+    .project-spot-nu { font-size: 0.9rem; color: #f5f5f5; font-weight: 600; min-width: 80px; text-align: right; }
+    .project-spot-sag { font-size: 0.9rem; color: #5b9bd5; font-weight: 600; min-width: 80px; text-align: right; }
+    .project-spot-remove { font-size: 0.75rem; color: #333; cursor: pointer; padding: 2px 8px; border: 1px solid #222; border-radius: 4px; background: none; }
+    .project-spot-remove:hover { color: #ff6b6b; border-color: #ff6b6b; }
+    .project-header-row { display: flex; justify-content: space-between; padding-bottom: 8px; border-bottom: 1px solid #222; margin-bottom: 4px; }
+    .project-header-row span { font-size: 0.7rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #444; }
   </style>
 </head>
 <body>
@@ -308,6 +336,33 @@
           </div>
         </div>
         <div class="calc-note" id="calc-note"></div>
+        <div class="add-spot-row" id="add-spot-row" style="display:none;">
+          <label style="display:flex;align-items:center;gap:8px;font-size:0.85rem;color:#888;cursor:pointer;">
+            <input type="checkbox" id="is-lift" onchange="toggleLift()" style="accent-color:#5cff9c;">
+            This is a lift / cut-down (50% usage fee)
+          </label>
+          <button class="calc-btn" style="margin-top:0;padding:10px 20px;font-size:0.85rem;" onclick="addToProject()">+ Add to Project</button>
+        </div>
+      </div>
+
+      <!-- PROJECT TOTAL PANEL -->
+      <div class="calc-wrap" id="project-panel" style="display:none;padding-top:0;">
+        <hr style="border:none;border-top:1px solid #1a1a1a;margin-bottom:32px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+          <h3 style="font-size:1.1rem;font-weight:700;color:#f5f5f5;margin:0;">Project Total</h3>
+          <button onclick="clearProject()" style="background:none;border:1px solid #333;color:#555;font-size:0.75rem;padding:5px 12px;border-radius:6px;cursor:pointer;">Clear All</button>
+        </div>
+        <div id="project-lines" style="margin-bottom:24px;"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div class="rate-total-block non-union" style="margin:0;">
+            <div class="rate-line"><span class="rate-label">Non-Union Total</span><span class="rate-value" id="proj-nu-total">—</span></div>
+            <div class="rate-line" style="margin-top:4px;"><span class="rate-label" style="font-size:0.75rem;color:#555;">incl. session + all usage + agent</span><span></span></div>
+          </div>
+          <div class="rate-total-block" style="margin:0;">
+            <div class="rate-line"><span class="rate-label">SAG-AFTRA Total</span><span class="rate-value accent" id="proj-sag-total">—</span></div>
+            <div class="rate-line" style="margin-top:4px;"><span class="rate-label" style="font-size:0.75rem;color:#555;">incl. session + all usage + agent + H&R</span><span></span></div>
+          </div>
+        </div>
       </div>
     </div>
   </main>
@@ -626,6 +681,7 @@
         if (radioRun === '26wk' || radioRun === '52wk') scBase = Math.round(scBase * 1.5);
         const scSession = SC_SESSION;
         const scUsageOnly = scBase;
+        window._nuUsage = scUsageOnly;
         const scAgent = Math.round((scSession + scUsageOnly) * AGENT_NONUNION);
         const scTotal = scSession + scUsageOnly + scAgent;
         gvaaHTML = rl('Session Fee', fmtInt(scSession));
@@ -648,11 +704,13 @@
           const sagAgent = sagBase * AGENT_UNION;
           const sagHR = sagBase * HR_RATE;
           const sagTotal = sagBase + sagAgent + sagHR;
+          window._sagBaseTotal = sagBase;
           sagHTML += rl('Session + Use Fee', fmt(sagBase));
           sagHTML += rl('Agent Fee (10%)', fmt(sagAgent));
           sagHTML += rl('H&R Contribution (23.5%)', fmt(sagHR));
           sagHTML += totalBlock('Total Talent Cost', fmt(sagTotal), true);
         } else {
+          window._sagBaseTotal = 0;
           sagHTML = '<p class="no-rate">Rate not available. Contact us for a quote.</p>';
         }
         noteHTML = '<strong>Radio rates</strong> are per spot, per talent. Market Rate is based on real productions on Select Casting (non-union median, floored at industry guidelines for major markets). SAG-AFTRA rates effective April 1, 2025–March 31, 2026.';
@@ -664,6 +722,7 @@
         let scUsage = SC_TV[market]?.[run] || null;
         if (scUsage && spot === '15') scUsage = Math.round(scUsage * 0.7);
         if (scUsage) {
+          window._nuUsage = scUsage;
           const scSession = SC_SESSION;
           const scAgent = Math.round((scSession + scUsage) * AGENT_NONUNION);
           const scTotal = scSession + scUsage + scAgent;
@@ -679,6 +738,7 @@
         const sagUse = SAG_TV_USE[market]?.[run] || null;
         if (sagUse != null) {
           const sagBase = sagSession + sagUse;
+          window._sagBaseTotal = sagBase;
           const sagAgent = sagBase * AGENT_UNION;
           const sagHR = sagBase * HR_RATE;
           const sagTotal = sagBase + sagAgent + sagHR;
@@ -699,6 +759,7 @@
         let scUsage = SC_DIGITAL[market]?.[run] || null;
         if (scUsage && spot === '15') scUsage = Math.round(scUsage * 0.7);
         if (scUsage) {
+          window._nuUsage = scUsage;
           const scSession = SC_SESSION;
           const scAgent = Math.round((scSession + scUsage) * AGENT_NONUNION);
           const scTotal = scSession + scUsage + scAgent;
@@ -714,6 +775,7 @@
         const sagUse = SAG_DIGITAL_USE[market]?.[run] || null;
         if (sagUse != null) {
           const sagBase = sagSession + sagUse;
+          window._sagBaseTotal = sagBase;
           const sagAgent = sagBase * AGENT_UNION;
           const sagHR = sagBase * HR_RATE;
           const sagTotal = sagBase + sagAgent + sagHR;
@@ -784,10 +846,118 @@
       document.getElementById('sag-lines').innerHTML = sagHTML || '<p class="no-rate">Rate not available. Contact us for a quote.</p>';
       document.getElementById('calc-note').innerHTML = noteHTML + ' Rates shown are per talent (principal performer). <strong>Market Rate</strong> is based on the 75th percentile of real non-union productions posted on Select Casting — TV and Radio use the last 2 years of data (2024–2026); Digital and Industrial use all available data for larger sample accuracy. Rates are derived from productions where talent budgets were explicitly documented; projects with undisclosed or negotiated-offline budgets are not included. Rates represent what well-compensated talent on professional productions actually earns, floored at industry guidelines where market data runs lower. <strong>SAG-AFTRA</strong> rates are contractual minimums (effective April 1, 2025–March 31, 2026); H&R contribution (23.5%) is paid by the employer on top of talent fees. Talent must be a SAG-AFTRA member; producer must be a SAG signatory.';
 
+      document.getElementById('add-spot-row').style.display = 'flex';
+      document.getElementById('is-lift').checked = false;
+
       const el = document.getElementById('results');
       el.classList.add('visible');
       el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      // Store for project total
+      window._lastSpotData = { label: heading, nuUsage: window._nuUsage || 0, nuSession: SC_SESSION, sagBaseTotal: window._sagBaseTotal || 0 };
     }
+
+    // ─── PROJECT TOTAL ────────────────────────────────────────────
+
+    let projectSpots = [];
+
+    function toggleLift() {
+      renderProjectPanel();
+    }
+
+    function addToProject() {
+      const d = window._lastSpotData;
+      if (!d) return;
+      const isLift = document.getElementById('is-lift').checked;
+      projectSpots.push({
+        label: d.label,
+        nuUsage: d.nuUsage,
+        nuSession: d.nuSession,
+        sagBaseTotal: d.sagBaseTotal,
+        isLift
+      });
+      document.getElementById('is-lift').checked = false;
+      renderProjectPanel();
+    }
+
+    function removeSpot(i) {
+      projectSpots.splice(i, 1);
+      renderProjectPanel();
+    }
+
+    function clearProject() {
+      projectSpots = [];
+      renderProjectPanel();
+    }
+
+    function renderProjectPanel() {
+      const panel = document.getElementById('project-panel');
+      if (projectSpots.length === 0) {
+        panel.style.display = 'none';
+        return;
+      }
+      panel.style.display = 'block';
+
+      // Session fee paid once (highest session fee in project)
+      const sessionFee = SC_SESSION;
+
+      let nuUsageTotal = 0, sagUsageTotal = 0;
+      let rows = `<div class="project-header-row">
+        <span style="flex:1;">Spot</span>
+        <span style="min-width:80px;text-align:right;">Non-Union</span>
+        <span style="min-width:80px;text-align:right;">SAG-AFTRA</span>
+        <span style="width:48px;"></span>
+      </div>`;
+
+      projectSpots.forEach((s, i) => {
+        const nuU = s.isLift ? Math.round(s.nuUsage * 0.5) : s.nuUsage;
+        const sagU = s.isLift ? Math.round(s.sagBaseTotal * 0.5) : s.sagBaseTotal;
+        nuUsageTotal += nuU;
+        sagUsageTotal += sagU;
+        const liftTag = s.isLift ? '<span class="project-spot-lift">lift</span>' : '';
+        rows += `<div class="project-spot-row">
+          <span class="project-spot-label">${s.label}${liftTag}</span>
+          <span class="project-spot-nu">${fmtInt(nuU)}</span>
+          <span class="project-spot-sag">${fmtInt(sagU)}</span>
+          <button class="project-spot-remove" onclick="removeSpot(${i})">✕</button>
+        </div>`;
+      });
+
+      // Session fee row
+      rows += `<div class="project-spot-row" style="border-bottom:1px solid #222;opacity:0.6;">
+        <span class="project-spot-label">Session fee (once)</span>
+        <span class="project-spot-nu">${fmtInt(sessionFee)}</span>
+        <span class="project-spot-sag">${fmtInt(SAG_TV_SESSION)}</span>
+        <span style="width:48px;"></span>
+      </div>`;
+
+      document.getElementById('project-lines').innerHTML = rows;
+
+      // Grand totals
+      const nuGrand = sessionFee + nuUsageTotal;
+      const nuAgent = Math.round(nuGrand * AGENT_NONUNION);
+      const nuFinal = nuGrand + nuAgent;
+
+      const sagGrand = SAG_TV_SESSION + sagUsageTotal;
+      const sagAgent = sagGrand * AGENT_UNION;
+      const sagHR = sagGrand * HR_RATE;
+      const sagFinal = sagGrand + sagAgent + sagHR;
+
+      document.getElementById('proj-nu-total').textContent = fmtInt(nuFinal);
+      document.getElementById('proj-sag-total').textContent = fmt(sagFinal);
+
+      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // Patch calculate() to capture last spot values
+    const _realCalculate = window.calculate;
+    // We intercept by reading DOM values after calculate runs
+    function calculate() {
+      _realCalculate ? _realCalculate() : null;
+    }
+
+    // Patch calculate() — kept for forward compat
+    const _realCalculate = window.calculate;
 
     // Init
     onCategoryChange();
