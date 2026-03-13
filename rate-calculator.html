@@ -950,15 +950,6 @@
     }
 
     // Patch calculate() to capture last spot values
-    const _realCalculate = window.calculate;
-    // We intercept by reading DOM values after calculate runs
-    function calculate() {
-      _realCalculate ? _realCalculate() : null;
-    }
-
-    // Patch calculate() — kept for forward compat
-    const _realCalculate = window.calculate;
-
     // Init
     onCategoryChange();
 
