@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VO Rate Calculator — Studio Awesome</title>
+  <meta name="description" content="Calculate union (SAG-AFTRA) and non-union (GVAA) voiceover talent rates for radio and audio commercials. Compare side by side." />
+  <link rel="icon" href="favicon.ico" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .calc-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 60px 24px 80px;
+    }
+    .calc-wrap h1 {
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 700;
+      color: #f5f5f5;
+      margin-bottom: 8px;
+    }
+    .calc-wrap .calc-subtitle {
+      color: #8c8c8c;
+      font-size: 1rem;
+      margin-bottom: 48px;
+    }
+    .calc-form {
+      background: #050505;
+      border: 1px solid #222;
+      border-radius: 16px;
+      padding: 36px;
+      margin-bottom: 40px;
+    }
+    .calc-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 600px) {
+      .calc-row { grid-template-columns: 1fr; }
+      .calc-form { padding: 24px; }
+    }
+    .calc-field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .calc-field label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #8c8c8c;
+    }
+    .calc-field select {
+      background: #0a0a0a;
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: #f5f5f5;
+      font-size: 0.95rem;
+      padding: 12px 14px;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238c8c8c' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .calc-field select:focus {
+      outline: none;
+      border-color: #5cff9c;
+    }
+    .calc-btn {
+      display: inline-block;
+      background: #5cff9c;
+      color: #000;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.04em;
+      padding: 14px 36px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      margin-top: 8px;
+    }
+    .calc-btn:hover { opacity: 0.85; }
+
+    /* Results */
+    .calc-results {
+      display: none;
+    }
+    .calc-results.visible {
+      display: block;
+    }
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+    @media (max-width: 600px) {
+      .results-grid { grid-template-columns: 1fr; }
+    }
+    .result-card {
+      background: #050505;
+      border: 1px solid #222;
+      border-radius: 16px;
+      padding: 28px;
+    }
+    .result-card.union {
+      border-color: #5cff9c33;
+    }
+    .result-card .card-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #8c8c8c;
+      margin-bottom: 6px;
+    }
+    .result-card .card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #f5f5f5;
+      margin-bottom: 20px;
+    }
+    .result-card.union .card-title { color: #5cff9c; }
+    .rate-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 10px 0;
+      border-bottom: 1px solid #1a1a1a;
+      font-size: 0.9rem;
+    }
+    .rate-line:last-child { border-bottom: none; }
+    .rate-line .rate-label { color: #8c8c8c; }
+    .rate-line .rate-value { color: #f5f5f5; font-weight: 600; }
+    .rate-line .rate-value.accent { color: #5cff9c; }
+    .rate-total {
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid #333;
+    }
+    .rate-total .rate-label { color: #f5f5f5; font-weight: 600; }
+    .rate-total .rate-value { font-size: 1.1rem; color: #5cff9c; }
+
+    .calc-note {
+      background: #050505;
+      border: 1px solid #222;
+      border-radius: 12px;
+      padding: 20px 24px;
+      font-size: 0.85rem;
+      color: #8c8c8c;
+      line-height: 1.6;
+    }
+    .calc-note strong { color: #f5f5f5; }
+    .compare-tag {
+      display: inline-block;
+      background: #5cff9c15;
+      border: 1px solid #5cff9c33;
+      color: #5cff9c;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+    }
+    .results-heading {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #f5f5f5;
+      margin-bottom: 20px;
+    }
+    .no-rate {
+      color: #555;
+      font-style: italic;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+  <nav class="sa-nav">
+    <div class="sa-nav-inner">
+      <a href="index.html" class="sa-logo">
+        <img src="assets/logo.png" alt="Studio Awesome" />
+      </a>
+      <div class="sa-nav-links">
+        <a href="adr.html">ADR</a>
+        <a href="animation.html">Animation</a>
+        <a href="commercial.html">Commercial</a>
+        <a href="voiceover.html">Voiceover</a>
+        <a href="people.html">People</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="calc-wrap">
+      <h1>VO Rate Calculator</h1>
+      <p class="calc-subtitle">Compare union (SAG-AFTRA) and non-union (GVAA) talent rates side by side. 2025 rates.</p>
+
+      <div class="calc-form">
+        <div class="calc-row">
+          <div class="calc-field">
+            <label>Medium</label>
+            <select id="medium">
+              <option value="radio">Radio</option>
+              <option value="digital">Digital / Streaming Audio</option>
+              <option value="national">National Network Radio</option>
+            </select>
+          </div>
+          <div class="calc-field">
+            <label>Market</label>
+            <select id="market">
+              <option value="local">Local (single market, no majors)</option>
+              <option value="ny">New York only</option>
+              <option value="chila">Chicago or LA only</option>
+              <option value="twomajors">Two of NY / Chicago / LA</option>
+              <option value="allthree">All Three — NY + Chicago + LA</option>
+              <option value="national">National</option>
+            </select>
+          </div>
+        </div>
+        <div class="calc-row">
+          <div class="calc-field">
+            <label>Run Length</label>
+            <select id="runlength">
+              <option value="4wk">4 Weeks</option>
+              <option value="8wk" selected>8 Weeks</option>
+              <option value="13wk">13 Weeks</option>
+              <option value="26wk">26 Weeks / 6 Months</option>
+              <option value="52wk">52 Weeks / 1 Year</option>
+            </select>
+          </div>
+          <div class="calc-field">
+            <label>Spot Length</label>
+            <select id="spotlength">
+              <option value="60">:60</option>
+              <option value="30" selected>:30</option>
+              <option value="15">:15</option>
+            </select>
+          </div>
+        </div>
+        <button class="calc-btn" onclick="calculate()">Calculate Rates</button>
+      </div>
+
+      <div class="calc-results" id="results">
+        <div class="compare-tag">SIDE-BY-SIDE COMPARISON</div>
+        <div class="results-heading" id="results-heading">Results</div>
+        <div class="results-grid">
+          <!-- Non-Union -->
+          <div class="result-card">
+            <div class="card-label">Non-Union</div>
+            <div class="card-title">GVAA Rate Guide</div>
+            <div id="gvaa-lines"></div>
+          </div>
+          <!-- Union -->
+          <div class="result-card union">
+            <div class="card-label">Union</div>
+            <div class="card-title">SAG-AFTRA 2025</div>
+            <div id="sag-lines"></div>
+          </div>
+        </div>
+
+        <div class="calc-note">
+          <strong>GVAA rates</strong> are suggested minimums for non-union talent — actual rates vary by talent experience and negotiation. <strong>SAG-AFTRA rates</strong> are contractual minimums (effective April 1, 2025 – March 31, 2026) and are non-negotiable. SAG jobs also require a <strong>23.5% H&R (Health & Retirement)</strong> contribution by the employer, shown above. Talent must be a SAG-AFTRA member; producer must be a SAG signatory. Rates shown are per talent (principal performer).
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="sa-footer">
+    <div class="sa-footer-inner">
+      <span class="sa-footer-copy" style="opacity:0.18; font-size:0.75rem;">© 2025 Studio Awesome. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <script>
+    // SAG-AFTRA 2025 Audio Commercials — Wild Spot rates
+    const SAG_WILD = {
+      // [8wk, 13wk]
+      local:     [365.00, 365.00],
+      ny:        [437.14, 546.46],
+      chila:     [396.52, 495.62],
+      twomajors: [533.22, 666.53],
+      allthree:  [673.73, 842.17],
+    };
+
+    // SAG National Terrestrial
+    const SAG_NATIONAL = {
+      '4wk':  808.49,
+      '8wk':  1328.23,
+      '13wk': 1674.72,
+      '26wk': 2483.21,
+      '52wk': 4273.43,
+    };
+
+    // SAG Digital (Traditional Digital)
+    const SAG_DIGITAL = {
+      '4wk':  469.92,
+      '8wk':  499.99,
+      '13wk': null,
+      '26wk': null,
+      '52wk': 1315.76,
+    };
+
+    // GVAA non-union radio ranges
+    const GVAA_RADIO = {
+      local:     { low: 150, high: 350 },
+      ny:        { low: 300, high: 750 },  // treat as regional
+      chila:     { low: 300, high: 750 },
+      twomajors: { low: 300, high: 750 },
+      allthree:  { low: 750, high: 2500 }, // national
+      national:  { low: 750, high: 2500 },
+    };
+
+    const GVAA_DIGITAL = {
+      local:     { low: 150, high: 350 },
+      ny:        { low: 250, high: 600 },
+      chila:     { low: 250, high: 600 },
+      twomajors: { low: 400, high: 900 },
+      allthree:  { low: 500, high: 1500 },
+      national:  { low: 500, high: 1500 },
+    };
+
+    const HR_RATE = 0.235;
+
+    function fmt(n) {
+      if (n === null || n === undefined) return null;
+      return '$' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
+    function rateLine(label, value, accent) {
+      if (value === null) return '';
+      return `<div class="rate-line">
+        <span class="rate-label">${label}</span>
+        <span class="rate-value${accent ? ' accent' : ''}">${value}</span>
+      </div>`;
+    }
+
+    function calculate() {
+      const medium = document.getElementById('medium').value;
+      const market = document.getElementById('market').value;
+      const run = document.getElementById('runlength').value;
+      const spot = document.getElementById('spotlength').value;
+
+      // --- Build heading ---
+      const marketLabels = {
+        local: 'Local Market',
+        ny: 'New York',
+        chila: 'Chicago or LA',
+        twomajors: 'Two Major Markets',
+        allthree: 'All Three Majors',
+        national: 'National'
+      };
+      const runLabels = { '4wk':'4 Weeks','8wk':'8 Weeks','13wk':'13 Weeks','26wk':'26 Weeks','52wk':'52 Weeks' };
+      const medLabels = { radio:'Radio', digital:'Digital Audio', national:'National Network Radio' };
+      document.getElementById('results-heading').textContent =
+        `:${spot} ${medLabels[medium]} — ${marketLabels[market]} — ${runLabels[run]}`;
+
+      // --- SAG ---
+      let sagBase = null;
+      let sagNote = '';
+
+      if (medium === 'radio') {
+        if (market === 'national') {
+          sagBase = SAG_NATIONAL[run] || null;
+          sagNote = 'National terrestrial radio';
+        } else {
+          // Wild spot
+          const wildRates = SAG_WILD[market];
+          if (wildRates) {
+            if (run === '8wk' || run === '4wk') {
+              sagBase = wildRates[0]; // 8-week rate
+              sagNote = '8-Week Wild Spot';
+            } else if (run === '13wk' || run === '26wk' || run === '52wk') {
+              sagBase = wildRates[1]; // 13-week rate
+              sagNote = '13-Week Wild Spot';
+            }
+          }
+        }
+      } else if (medium === 'digital') {
+        sagBase = SAG_DIGITAL[run] || null;
+        sagNote = 'Traditional Digital';
+      } else if (medium === 'national') {
+        sagBase = SAG_NATIONAL[run] || null;
+        sagNote = 'National Terrestrial';
+      }
+
+      // Spot length modifier for SAG (:15 = 50% of :30/:60 in some contracts, but audio wild spot doesn't differentiate — note it)
+      let sagSpotNote = spot === '15' ? '<div class="rate-line"><span class="rate-label">:15 spot</span><span class="rate-value" style="color:#8c8c8c;font-size:0.82rem;">Same rate as :30/:60 for audio wild spot</span></div>' : '';
+
+      let sagHR = sagBase ? sagBase * HR_RATE : null;
+      let sagTotal = sagBase ? sagBase + sagHR : null;
+
+      let sagHTML = '';
+      if (sagBase) {
+        sagHTML += rateLine('Session + Use Fee', fmt(sagBase));
+        if (sagNote) sagHTML += `<div class="rate-line"><span class="rate-label" style="font-size:0.8rem;">${sagNote}</span><span class="rate-value" style="color:#555;font-size:0.8rem;">SAG 2025</span></div>`;
+        sagHTML += sagSpotNote;
+        sagHTML += rateLine('H&R Contribution (23.5%)', fmt(sagHR));
+        sagHTML += `<div class="rate-total"><div class="rate-line rate-total">
+          <span class="rate-label">Total Talent Cost</span>
+          <span class="rate-value accent">${fmt(sagTotal)}</span>
+        </div></div>`;
+      } else {
+        sagHTML = '<p class="no-rate">Rate not available for this combination. Contact us for a custom quote.</p>';
+      }
+
+      // --- GVAA ---
+      let gvaaRange = null;
+      if (medium === 'national') {
+        gvaaRange = GVAA_RADIO['national'];
+      } else if (medium === 'digital') {
+        gvaaRange = GVAA_DIGITAL[market] || GVAA_DIGITAL['local'];
+      } else {
+        gvaaRange = GVAA_RADIO[market] || GVAA_RADIO['local'];
+      }
+
+      // Run length modifier for GVAA (longer runs = higher end of range)
+      let gvaaNote = 'Suggested minimum — negotiable';
+      let gvaaLow = gvaaRange.low;
+      let gvaaHigh = gvaaRange.high;
+
+      // Spot length: :15 typically lower
+      if (spot === '15') {
+        gvaaLow = Math.round(gvaaLow * 0.7);
+        gvaaHigh = Math.round(gvaaHigh * 0.7);
+        gvaaNote = ':15 spot — approx. 70% of :30/:60 rate';
+      }
+
+      // Run length: longer runs push toward high end
+      if (run === '26wk' || run === '52wk') {
+        gvaaLow = Math.round(gvaaLow * 1.3);
+        gvaaHigh = Math.round(gvaaHigh * 1.5);
+        gvaaNote += ' · Extended run';
+      }
+
+      let gvaaHTML = '';
+      gvaaHTML += rateLine('Rate Range (Low)', '$' + gvaaLow.toLocaleString());
+      gvaaHTML += rateLine('Rate Range (High)', '$' + gvaaHigh.toLocaleString());
+      gvaaHTML += `<div class="rate-line"><span class="rate-label" style="font-size:0.8rem;">${gvaaNote}</span><span class="rate-value" style="color:#555;font-size:0.8rem;">GVAA Guide</span></div>`;
+      gvaaHTML += `<div class="rate-total"><div class="rate-line rate-total">
+        <span class="rate-label">Typical Budget Range</span>
+        <span class="rate-value">$${gvaaLow.toLocaleString()} – $${gvaaHigh.toLocaleString()}</span>
+      </div></div>`;
+      gvaaHTML += '<div class="rate-line"><span class="rate-label" style="font-size:0.8rem;">No H&R required</span><span class="rate-value" style="color:#5cff9c;font-size:0.8rem;">Non-union</span></div>';
+
+      document.getElementById('gvaa-lines').innerHTML = gvaaHTML;
+      document.getElementById('sag-lines').innerHTML = sagHTML;
+
+      const el = document.getElementById('results');
+      el.classList.add('visible');
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  </script>
+</body>
+</html>
