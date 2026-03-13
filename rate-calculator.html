@@ -445,12 +445,12 @@
 
         <div id="project-lines" style="margin-bottom:24px;"></div>
 
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-          <div class="rate-total-block non-union" style="margin:0;">
+        <div id="proj-totals-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div class="rate-total-block non-union" id="proj-nu-block" style="margin:0;">
             <div class="rate-line"><span class="rate-label">Non-Union Total</span><span class="rate-value" id="proj-nu-total">—</span></div>
             <div style="font-size:0.75rem;color:#666;margin-top:4px;">session + all usage + 20% agent</div>
           </div>
-          <div class="rate-total-block" style="margin:0;">
+          <div class="rate-total-block" id="proj-sag-block" style="margin:0;">
             <div class="rate-line"><span class="rate-label">SAG-AFTRA Total</span><span class="rate-value accent" id="proj-sag-total">—</span></div>
             <div style="font-size:0.75rem;color:#666;margin-top:4px;">session + all usage + 10% agent + 23.5% H&R</div>
           </div>
@@ -1032,16 +1032,17 @@
       let nuUsageTotal  = nuUsage;
       let sagUsageTotal = sagUsage;
 
+      const showNU = !sagOnlyMode;
       let rows = `<div class="project-header-row">
         <span style="flex:1;">Line Item</span>
-        <span style="min-width:90px;text-align:right;">Non-Union</span>
+        ${showNU ? '<span style="min-width:90px;text-align:right;">Non-Union</span>' : ''}
         <span style="min-width:90px;text-align:right;">SAG-AFTRA</span>
       </div>`;
 
       // Original spot
       rows += `<div class="project-spot-row">
         <span class="project-spot-label">${d.label}</span>
-        <span class="project-spot-nu">${fmtInt(nuUsage)}</span>
+        ${showNU ? `<span class="project-spot-nu">${fmtInt(nuUsage)}</span>` : ''}
         <span class="project-spot-sag">${fmtInt(sagUsage)}</span>
       </div>`;
 
@@ -1053,7 +1054,7 @@
         sagUsageTotal += cdSag;
         rows += `<div class="project-spot-row" style="padding-left:16px;">
           <span class="project-spot-label">Cut-downs × ${numCutdowns} <span style="font-size:0.75rem;color:#666;">(50% usage each — same recording, edited short)</span></span>
-          <span class="project-spot-nu">${fmtInt(cdNu)}</span>
+          ${showNU ? `<span class="project-spot-nu">${fmtInt(cdNu)}</span>` : ''}
           <span class="project-spot-sag">${fmtInt(cdSag)}</span>
         </div>`;
       }
@@ -1066,7 +1067,7 @@
         sagUsageTotal += lSag;
         rows += `<div class="project-spot-row" style="padding-left:16px;">
           <span class="project-spot-label">Lifts × ${numLifts} <span style="font-size:0.75rem;color:#666;">(50% usage each — section extracted from original)</span></span>
-          <span class="project-spot-nu">${fmtInt(lNu)}</span>
+          ${showNU ? `<span class="project-spot-nu">${fmtInt(lNu)}</span>` : ''}
           <span class="project-spot-sag">${fmtInt(lSag)}</span>
         </div>`;
       }
@@ -1084,7 +1085,7 @@
           : `unique per version — ${effectiveTags} total`;
         rows += `<div class="project-spot-row" style="padding-left:16px;">
           <span class="project-spot-label">Tags × ${numTags} <span style="font-size:0.75rem;color:#666;">(${tagNote})</span></span>
-          <span class="project-spot-nu">${fmtInt(tNu)}</span>
+          ${showNU ? `<span class="project-spot-nu">${fmtInt(tNu)}</span>` : ''}
           <span class="project-spot-sag">${fmtInt(tSag)}</span>
         </div>`;
       }
@@ -1094,7 +1095,7 @@
       if (!sessionIncluded) {
         rows += `<div class="project-spot-row" style="margin-top:8px;border-top:1px solid #222;padding-top:12px;">
           <span class="project-spot-label" style="color:#888;">Session fee <span style="font-size:0.75rem;color:#555;">(one session covers all versions)</span></span>
-          <span class="project-spot-nu" style="color:#888;">${fmtInt(SC_SESSION)}</span>
+          ${showNU ? `<span class="project-spot-nu" style="color:#888;">${fmtInt(SC_SESSION)}</span>` : ''}
           <span class="project-spot-sag" style="color:#5b9bd5;opacity:0.7;">${fmtInt(SAG_TV_SESSION)}</span>
         </div>`;
       }
@@ -1123,6 +1124,11 @@
       document.title = 'SAG-AFTRA VO Rate Reference — Studio Awesome';
       const scSection = document.getElementById('sc-data-section');
       if (scSection) scSection.style.display = 'none';
+      // Hide non-union column in Project Total; make SAG block full width
+      const nuBlock = document.getElementById('proj-nu-block');
+      if (nuBlock) nuBlock.style.display = 'none';
+      const grid = document.getElementById('proj-totals-grid');
+      if (grid) grid.style.gridTemplateColumns = '1fr';
       setUnionMode('union');
     } else {
       setUnionMode('non-union');
