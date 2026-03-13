@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>VO Rate Calculator — Studio Awesome</title>
-  <meta name="description" content="Calculate union (SAG-AFTRA) and non-union (GVAA) voiceover talent rates for radio, TV, digital, industrial, and commercial narration. Compare side by side." />
+  <meta name="description" content="Calculate voiceover talent rates side by side — SAG-AFTRA union scale vs. real-world non-union market rates based on thousands of actual productions on Select Casting." />
   <link rel="icon" href="favicon.ico" />
   <link rel="stylesheet" href="styles.css" />
   <style>
@@ -207,7 +207,7 @@
   <main>
     <div class="calc-wrap">
       <h1>VO Rate Calculator</h1>
-      <p class="calc-subtitle">Compare union (SAG-AFTRA) and non-union (GVAA) talent rates side by side. Based on 2025 rates.</p>
+      <p class="calc-subtitle">Compare SAG-AFTRA union scale against real-world non-union market rates — sourced from thousands of actual productions on Select Casting.</p>
 
       <div class="calc-form">
         <div class="calc-row">
@@ -298,7 +298,7 @@
         <div class="results-grid">
           <div class="result-card" id="card-gvaa">
             <div class="card-label">Non-Union</div>
-            <div class="card-title">GVAA Rate Guide</div>
+            <div class="card-title">Market Rate</div>
             <div id="gvaa-lines"></div>
           </div>
           <div class="result-card union" id="card-sag">
@@ -486,6 +486,42 @@
       '1-2': 2, '3-5': 5, '5-10': 10, '10-15': 15, '15-20': 20, '20-30': 30, '30-60': 60
     };
 
+    // ─── SELECT CASTING MARKET RATES ─────────────────────────────
+    // Based on 2,468 non-union productions on Select Casting (Late 2025–Q1 2026).
+    // All values are max(SC_median, GVAA) — GVAA acts as a floor where SC data runs lower.
+
+    const SC_SESSION = 500; // Flat; covers 2-hr session + all reads
+
+    // Radio: flat usage per spot (run-length multiplier applied same as GVAA)
+    // local: SC $550 wins over GVAA $350 | majors/national: GVAA $750/$2500 floors SC
+    const SC_RADIO = {
+      local: 550, ny: 750, chila: 750, twomajors: 750, allthree: 2500, national: 2500
+    };
+
+    // TV Broadcast: usage fee only (session $500 shown separately)
+    // local/regional short-term: SC wins | cable/national long-term: GVAA floors
+    const SC_TV = {
+      local:        { '3mo': 1000, '6mo': 1275, '12mo': 1500  },
+      regional:     { '3mo': 1250, '6mo': 1500, '12mo': 1800  },
+      cablenational:{ '3mo': 1500, '6mo': 2200, '12mo': 2800  },
+      national:     { '3mo': 1750, '6mo': 2800, '12mo': 3500  },
+    };
+
+    // Digital / OLV / Streaming: usage fee only (session $500 shown separately)
+    // local/regional short-term: SC wins | national long-term: GVAA floors
+    const SC_DIGITAL = {
+      local:        { '3mo': 750,  '6mo': 1000, '12mo': 1500  },
+      regional:     { '3mo': 900,  '6mo': 1250, '12mo': 1800  },
+      cablenational:{ '3mo': 1000, '6mo': 2000, '12mo': 2800  },
+      national:     { '3mo': 1250, '6mo': 2500, '12mo': 3200  },
+    };
+
+    // Industrial: usage fee only. Short scripts: SC wins. Longer: GVAA floors.
+    const SC_INDUSTRIAL = {
+      '1-2': 500, '3-5': 550, '5-10': 700,
+      '10-15': 800, '15-20': 950, '20-30': 1250, '30-60': 2350
+    };
+
     const HR_RATE = 0.235;
     const AGENT_UNION = 0.10;
     const AGENT_NONUNION = 0.20;
@@ -582,16 +618,19 @@
 
       // ── RADIO ─────────────────────────────────────────────────
       if (cat === 'radio') {
-        // GVAA
-        let gvaaBase = GVAA_RADIO[radioMarket] || 350;
-        if (spot === '15') gvaaBase = Math.round(gvaaBase * 0.7);
-        if (radioRun === '26wk' || radioRun === '52wk') gvaaBase = Math.round(gvaaBase * 1.5);
-        const gvaaAgent = Math.round(gvaaBase * AGENT_NONUNION);
-        const gvaaTotal = gvaaBase + gvaaAgent;
-        gvaaHTML = rl('Talent Rate (GVAA)', fmtInt(gvaaBase));
-        gvaaHTML += rl('Agent Fee (20%)', fmtInt(gvaaAgent));
+        // Market Rate (SC data, GVAA-floored)
+        let scBase = SC_RADIO[radioMarket] || 550;
+        if (spot === '15') scBase = Math.round(scBase * 0.7);
+        if (radioRun === '26wk' || radioRun === '52wk') scBase = Math.round(scBase * 1.5);
+        const scSession = SC_SESSION;
+        const scUsageOnly = scBase;
+        const scAgent = Math.round((scSession + scUsageOnly) * AGENT_NONUNION);
+        const scTotal = scSession + scUsageOnly + scAgent;
+        gvaaHTML = rl('Session Fee', fmtInt(scSession));
+        gvaaHTML += rl('Usage / Buyout', fmtInt(scUsageOnly));
+        gvaaHTML += rl('Agent Fee (20%)', fmtInt(scAgent));
         gvaaHTML += rl('No H&R required', '✓ Non-union', false, true);
-        gvaaHTML += totalBlock('Total Talent Cost', fmtInt(gvaaTotal), false);
+        gvaaHTML += totalBlock('Total Talent Cost', fmtInt(scTotal), false);
 
         // SAG
         let sagBase = null;
@@ -614,21 +653,23 @@
         } else {
           sagHTML = '<p class="no-rate">Rate not available. Contact us for a quote.</p>';
         }
-        noteHTML = '<strong>Radio rates</strong> are per spot, per talent. SAG-AFTRA rates effective April 1, 2025–March 31, 2026.';
+        noteHTML = '<strong>Radio rates</strong> are per spot, per talent. Market Rate is based on real productions on Select Casting (non-union median, floored at industry guidelines for major markets). SAG-AFTRA rates effective April 1, 2025–March 31, 2026.';
       }
 
       // ── TV BROADCAST ──────────────────────────────────────────
       else if (cat === 'tv') {
-        // GVAA
-        let gvaaBase = GVAA_TV[market]?.[run] || null;
-        if (gvaaBase && spot === '15') gvaaBase = Math.round(gvaaBase * 0.7);
-        if (gvaaBase) {
-          const gvaaAgent = Math.round(gvaaBase * AGENT_NONUNION);
-          const gvaaTotal = gvaaBase + gvaaAgent;
-          gvaaHTML = rl('Talent Rate (GVAA)', fmtInt(gvaaBase));
-          gvaaHTML += rl('Agent Fee (20%)', fmtInt(gvaaAgent));
+        // Market Rate (SC data, GVAA-floored)
+        let scUsage = SC_TV[market]?.[run] || null;
+        if (scUsage && spot === '15') scUsage = Math.round(scUsage * 0.7);
+        if (scUsage) {
+          const scSession = SC_SESSION;
+          const scAgent = Math.round((scSession + scUsage) * AGENT_NONUNION);
+          const scTotal = scSession + scUsage + scAgent;
+          gvaaHTML = rl('Session Fee', fmtInt(scSession));
+          gvaaHTML += rl('Usage / Buyout', fmtInt(scUsage));
+          gvaaHTML += rl('Agent Fee (20%)', fmtInt(scAgent));
           gvaaHTML += rl('No H&R required', '✓ Non-union', false, true);
-          gvaaHTML += totalBlock('Total Talent Cost', fmtInt(gvaaTotal), false);
+          gvaaHTML += totalBlock('Total Talent Cost', fmtInt(scTotal), false);
         }
 
         // SAG — session + use
@@ -647,21 +688,23 @@
         } else {
           sagHTML = '<p class="no-rate">Contact us for a custom quote.</p>';
         }
-        noteHTML = '<strong>TV rates</strong> are for off-camera VO principals. SAG includes a session fee + use fee. GVAA rates are per spot. Rates vary by market size and usage duration.';
+        noteHTML = '<strong>TV Broadcast rates</strong> are for off-camera VO principals. Market Rate is based on real productions on Select Casting (non-union median, floored at industry guidelines for national/cable). Both union and non-union show session + usage separately.';
       }
 
       // ── DIGITAL / ONLINE ──────────────────────────────────────
       else if (cat === 'digital') {
-        // GVAA
-        let gvaaBase = GVAA_DIGITAL[market]?.[run] || null;
-        if (gvaaBase && spot === '15') gvaaBase = Math.round(gvaaBase * 0.7);
-        if (gvaaBase) {
-          const gvaaAgent = Math.round(gvaaBase * AGENT_NONUNION);
-          const gvaaTotal = gvaaBase + gvaaAgent;
-          gvaaHTML = rl('Talent Rate (GVAA)', fmtInt(gvaaBase));
-          gvaaHTML += rl('Agent Fee (20%)', fmtInt(gvaaAgent));
+        // Market Rate (SC data, GVAA-floored)
+        let scUsage = SC_DIGITAL[market]?.[run] || null;
+        if (scUsage && spot === '15') scUsage = Math.round(scUsage * 0.7);
+        if (scUsage) {
+          const scSession = SC_SESSION;
+          const scAgent = Math.round((scSession + scUsage) * AGENT_NONUNION);
+          const scTotal = scSession + scUsage + scAgent;
+          gvaaHTML = rl('Session Fee', fmtInt(scSession));
+          gvaaHTML += rl('Usage / Buyout', fmtInt(scUsage));
+          gvaaHTML += rl('Agent Fee (20%)', fmtInt(scAgent));
           gvaaHTML += rl('No H&R required', '✓ Non-union', false, true);
-          gvaaHTML += totalBlock('Total Talent Cost', fmtInt(gvaaTotal), false);
+          gvaaHTML += totalBlock('Total Talent Cost', fmtInt(scTotal), false);
         }
 
         // SAG
@@ -680,16 +723,19 @@
         } else {
           sagHTML = '<p class="no-rate">Contact us for a custom quote.</p>';
         }
-        noteHTML = '<strong>Digital rates</strong> cover online spots with paid placement: YouTube, Hulu, social media, streaming pre-rolls, OTT. SAG uses the TV Commercials contract for digital placements.';
+        noteHTML = '<strong>Digital rates</strong> cover OLV, CTV/OTT, paid social, YouTube, and streaming. Market Rate is based on real productions on Select Casting (non-union median, floored at industry guidelines for national). SAG uses the TV Commercials contract for digital placements.';
       }
 
       // ── TAGLINE ───────────────────────────────────────────────
       else if (cat === 'tagline') {
+        // Taglines: no sufficient SC data; use GVAA as market reference
         const gvaaBase = GVAA_TAGLINE_TV[market]?.[run] || null;
         if (gvaaBase) {
-          const gvaaAgent = Math.round(gvaaBase * AGENT_NONUNION);
-          const gvaaTotal = gvaaBase + gvaaAgent;
-          gvaaHTML = rl('Tagline Rate (GVAA)', fmtInt(gvaaBase));
+          const scSession = SC_SESSION;
+          const gvaaAgent = Math.round((scSession + gvaaBase) * AGENT_NONUNION);
+          const gvaaTotal = scSession + gvaaBase + gvaaAgent;
+          gvaaHTML = rl('Session Fee', fmtInt(scSession));
+          gvaaHTML += rl('Tagline Rate', fmtInt(gvaaBase));
           gvaaHTML += rl('Agent Fee (20%)', fmtInt(gvaaAgent));
           gvaaHTML += rl('No H&R required', '✓ Non-union', false, true);
           gvaaHTML += totalBlock('Total Talent Cost', fmtInt(gvaaTotal), false);
@@ -700,14 +746,17 @@
 
       // ── INDUSTRIAL / CORPORATE ────────────────────────────────
       else if (cat === 'industrial') {
-        const gvaaBase = GVAA_INDUSTRIAL[script] || 450;
-        const gvaaAgent = Math.round(gvaaBase * AGENT_NONUNION);
-        const gvaaTotal = gvaaBase + gvaaAgent;
-        gvaaHTML = rl('Talent Rate (GVAA)', fmtInt(gvaaBase));
-        gvaaHTML += rl('Agent Fee (20%)', fmtInt(gvaaAgent));
+        // SC industrial: short scripts SC wins; longer scripts GVAA floors
+        const scSession = SC_SESSION;
+        const scUsage = SC_INDUSTRIAL[script] || 500;
+        const scAgent = Math.round((scSession + scUsage) * AGENT_NONUNION);
+        const scTotal = scSession + scUsage + scAgent;
+        gvaaHTML = rl('Session Fee', fmtInt(scSession));
+        gvaaHTML += rl('Usage / Buyout', fmtInt(scUsage));
+        gvaaHTML += rl('Agent Fee (20%)', fmtInt(scAgent));
         gvaaHTML += rl('Basis', 'Per finished script', false, true);
         gvaaHTML += rl('No H&R required', '✓ Non-union', false, true);
-        gvaaHTML += totalBlock('Total Talent Cost', fmtInt(gvaaTotal), false);
+        gvaaHTML += totalBlock('Total Talent Cost', fmtInt(scTotal), false);
         sagHTML = `<p class="no-rate">Industrial/corporate narration is typically non-union (GVAA rates apply). SAG-AFTRA does have a Corporate/Educational contract — contact us if union talent is required for this project.</p>`;
         noteHTML = '<strong>Industrial / Corporate Narration</strong> covers training videos, explainers, internal communications, and non-broadcast corporate content. These projects are typically non-union.';
       }
@@ -731,7 +780,7 @@
 
       document.getElementById('gvaa-lines').innerHTML = gvaaHTML || '<p class="no-rate">Rate not available for this combination.</p>';
       document.getElementById('sag-lines').innerHTML = sagHTML || '<p class="no-rate">Rate not available. Contact us for a quote.</p>';
-      document.getElementById('calc-note').innerHTML = noteHTML + ' Rates shown are per talent (principal performer). Agent fees are shown separately. <strong>SAG-AFTRA</strong> rates are contractual minimums (effective April 1, 2025–March 31, 2026); H&R contribution (23.5%) is paid by the employer. Talent must be a SAG-AFTRA member; producer must be a SAG signatory.';
+      document.getElementById('calc-note').innerHTML = noteHTML + ' Rates shown are per talent (principal performer). <strong>Market Rate</strong> is the non-union rate based on real productions posted on Select Casting (median of 2,468 non-union records, Late 2025–Q1 2026), floored at industry guidelines where market data runs lower. <strong>SAG-AFTRA</strong> rates are contractual minimums (effective April 1, 2025–March 31, 2026); H&R contribution (23.5%) is paid by the employer on top of talent fees. Talent must be a SAG-AFTRA member; producer must be a SAG signatory.';
 
       const el = document.getElementById('results');
       el.classList.add('visible');
