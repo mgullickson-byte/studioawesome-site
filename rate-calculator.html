@@ -319,7 +319,7 @@
     <h2 style="font-size:1.6rem;font-weight:700;color:#f5f5f5;margin-bottom:8px;">Market Rate Data — Select Casting</h2>
     <p style="color:#8c8c8c;font-size:0.9rem;margin-bottom:8px;">
       Based on <strong style="color:#f5f5f5;">2,468 real non-union productions</strong> posted on Select Casting (Late 2025 – Q1 2026).
-      What ad agencies, production companies, and brand marketers are <em>actually paying</em> — not guidelines from talent training organizations.
+      The calculator uses <strong style="color:#5cff9c;">75th percentile rates</strong> — what well-compensated talent on professional productions actually earns. The reference table below shows median and 75th for context.
     </p>
 
     <style>
@@ -488,38 +488,39 @@
 
     // ─── SELECT CASTING MARKET RATES ─────────────────────────────
     // Based on 2,468 non-union productions on Select Casting (Late 2025–Q1 2026).
-    // All values are max(SC_median, GVAA) — GVAA acts as a floor where SC data runs lower.
+    // Using 75th percentile — what well-compensated talent on real productions earns.
+    // All values are max(SC_75th, GVAA) — GVAA acts as a floor where SC data runs lower.
 
     const SC_SESSION = 500; // Flat; covers 2-hr session + all reads
 
     // Radio: flat usage per spot (run-length multiplier applied same as GVAA)
-    // local: SC $550 wins over GVAA $350 | majors/national: GVAA $750/$2500 floors SC
+    // local/twomajors: SC 75th wins | allthree/national: GVAA $2500 floors
     const SC_RADIO = {
-      local: 550, ny: 750, chila: 750, twomajors: 750, allthree: 2500, national: 2500
+      local: 750, ny: 750, chila: 750, twomajors: 1000, allthree: 2500, national: 2500
     };
 
     // TV Broadcast: usage fee only (session $500 shown separately)
-    // local/regional short-term: SC wins | cable/national long-term: GVAA floors
+    // 75th percentile, floored at GVAA where SC runs lower
     const SC_TV = {
-      local:        { '3mo': 1000, '6mo': 1275, '12mo': 1500  },
-      regional:     { '3mo': 1250, '6mo': 1500, '12mo': 1800  },
-      cablenational:{ '3mo': 1500, '6mo': 2200, '12mo': 2800  },
-      national:     { '3mo': 1750, '6mo': 2800, '12mo': 3500  },
+      local:        { '3mo': 1500, '6mo': 2000, '12mo': 2500  },
+      regional:     { '3mo': 2000, '6mo': 2500, '12mo': 2800  },
+      cablenational:{ '3mo': 2200, '6mo': 2800, '12mo': 3500  },
+      national:     { '3mo': 2500, '6mo': 3000, '12mo': 4000  },
     };
 
     // Digital / OLV / Streaming: usage fee only (session $500 shown separately)
-    // local/regional short-term: SC wins | national long-term: GVAA floors
+    // 75th percentile, floored at GVAA where SC runs lower
     const SC_DIGITAL = {
-      local:        { '3mo': 750,  '6mo': 1000, '12mo': 1500  },
-      regional:     { '3mo': 900,  '6mo': 1250, '12mo': 1800  },
-      cablenational:{ '3mo': 1000, '6mo': 2000, '12mo': 2800  },
-      national:     { '3mo': 1250, '6mo': 2500, '12mo': 3200  },
+      local:        { '3mo': 1000, '6mo': 1500, '12mo': 2000  },
+      regional:     { '3mo': 1250, '6mo': 1750, '12mo': 2200  },
+      cablenational:{ '3mo': 1500, '6mo': 2000, '12mo': 2800  },
+      national:     { '3mo': 2000, '6mo': 2500, '12mo': 3200  },
     };
 
-    // Industrial: usage fee only. Short scripts: SC wins. Longer: GVAA floors.
+    // Industrial: 75th percentile, floored at GVAA for longer scripts
     const SC_INDUSTRIAL = {
-      '1-2': 500, '3-5': 550, '5-10': 700,
-      '10-15': 800, '15-20': 950, '20-30': 1250, '30-60': 2350
+      '1-2': 750, '3-5': 750, '5-10': 750,
+      '10-15': 800, '15-20': 1000, '20-30': 1250, '30-60': 2350
     };
 
     const HR_RATE = 0.235;
@@ -780,7 +781,7 @@
 
       document.getElementById('gvaa-lines').innerHTML = gvaaHTML || '<p class="no-rate">Rate not available for this combination.</p>';
       document.getElementById('sag-lines').innerHTML = sagHTML || '<p class="no-rate">Rate not available. Contact us for a quote.</p>';
-      document.getElementById('calc-note').innerHTML = noteHTML + ' Rates shown are per talent (principal performer). <strong>Market Rate</strong> is the non-union rate based on real productions posted on Select Casting (median of 2,468 non-union records, Late 2025–Q1 2026), floored at industry guidelines where market data runs lower. <strong>SAG-AFTRA</strong> rates are contractual minimums (effective April 1, 2025–March 31, 2026); H&R contribution (23.5%) is paid by the employer on top of talent fees. Talent must be a SAG-AFTRA member; producer must be a SAG signatory.';
+      document.getElementById('calc-note').innerHTML = noteHTML + ' Rates shown are per talent (principal performer). <strong>Market Rate</strong> is based on the 75th percentile of 2,468 real non-union productions posted on Select Casting (Late 2025–Q1 2026) — what well-compensated talent on professional productions actually earns. Floored at industry guidelines where market data runs lower. <strong>SAG-AFTRA</strong> rates are contractual minimums (effective April 1, 2025–March 31, 2026); H&R contribution (23.5%) is paid by the employer on top of talent fees. Talent must be a SAG-AFTRA member; producer must be a SAG signatory.';
 
       const el = document.getElementById('results');
       el.classList.add('visible');
