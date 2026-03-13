@@ -843,7 +843,7 @@
           window._sagBaseTotal = 0;
           sagHTML = '<p class="no-rate">Rate not available. Contact us for a quote.</p>';
         }
-        noteHTML = '<strong>Radio rates</strong> are per spot, per talent. Market Rate is based on real productions on Select Casting (non-union median, floored at industry guidelines for major markets). SAG-AFTRA rates effective April 1, 2025–March 31, 2026.';
+        noteHTML = '<strong>Radio (Non-Union):</strong> Select Casting data does not have sufficient market-tier breakdown for radio — rates shown are <strong>GVAA guidelines</strong>, not Select Casting transaction data. SAG-AFTRA rates effective April 1, 2025–March 31, 2026.';
       }
 
       // ── TV BROADCAST ──────────────────────────────────────────
@@ -975,6 +975,10 @@
       document.getElementById('gvaa-lines').innerHTML = gvaaHTML || '<p class="no-rate">Rate not available for this combination.</p>';
       document.getElementById('sag-lines').innerHTML = sagHTML || '<p class="no-rate">Rate not available. Contact us for a quote.</p>';
       document.getElementById('calc-note').innerHTML = noteHTML + ' Rates shown are per talent (principal performer). <strong>Market Rate</strong> is based on the 75th percentile of real non-union productions posted on Select Casting — TV and Digital use Select Casting data (2024–2026); Radio uses GVAA rates by market tier (SC data cannot distinguish local vs. national); Industrial uses full SC dataset. Rates are derived from productions where talent budgets were explicitly documented; projects with undisclosed or negotiated-offline budgets are not included. Rates represent what well-compensated talent on professional productions actually earns, floored at industry guidelines where market data runs lower. <strong>SAG-AFTRA</strong> rates are contractual minimums (effective April 1, 2025–March 31, 2026); H&R contribution (23.5%) is paid by the employer on top of talent fees. Talent must be a SAG-AFTRA member; producer must be a SAG signatory.';
+
+      // Update non-union card title based on data source
+      document.querySelector('#card-gvaa .card-title').textContent =
+        (cat === 'radio') ? 'GVAA Guidelines' : 'Market Rate';
 
       applyUnionMode();
 
