@@ -268,7 +268,7 @@
         </div>
 
         <div class="calc-note">
-          <strong>GVAA rates</strong> are suggested minimums for non-union talent — actual rates vary by talent experience and negotiation. <strong>SAG-AFTRA rates</strong> are contractual minimums (effective April 1, 2025 – March 31, 2026) and are non-negotiable. SAG jobs also require a <strong>23.5% H&R (Health & Retirement)</strong> contribution by the employer, shown above. Talent must be a SAG-AFTRA member; producer must be a SAG signatory. Rates shown are per talent (principal performer).
+          <strong>GVAA rates</strong> reflect the high end of the suggested rate guide for non-union talent, plus a <strong>20% agent fee</strong>. <strong>SAG-AFTRA rates</strong> are contractual minimums (effective April 1, 2025 – March 31, 2026) and are non-negotiable, plus a <strong>10% agent fee</strong> and <strong>23.5% H&R (Health & Retirement)</strong> contribution by the employer. Talent must be a SAG-AFTRA member; producer must be a SAG signatory. Rates shown are per talent (principal performer).
         </div>
       </div>
     </div>
@@ -395,14 +395,16 @@
       // Spot length modifier for SAG (:15 = 50% of :30/:60 in some contracts, but audio wild spot doesn't differentiate — note it)
       let sagSpotNote = spot === '15' ? '<div class="rate-line"><span class="rate-label">:15 spot</span><span class="rate-value" style="color:#8c8c8c;font-size:0.82rem;">Same rate as :30/:60 for audio wild spot</span></div>' : '';
 
+      let sagAgent = sagBase ? sagBase * 0.10 : null;
       let sagHR = sagBase ? sagBase * HR_RATE : null;
-      let sagTotal = sagBase ? sagBase + sagHR : null;
+      let sagTotal = sagBase ? sagBase + sagAgent + sagHR : null;
 
       let sagHTML = '';
       if (sagBase) {
         sagHTML += rateLine('Session + Use Fee', fmt(sagBase));
         if (sagNote) sagHTML += `<div class="rate-line"><span class="rate-label" style="font-size:0.8rem;">${sagNote}</span><span class="rate-value" style="color:#555;font-size:0.8rem;">SAG 2025</span></div>`;
         sagHTML += sagSpotNote;
+        sagHTML += rateLine('Agent Fee (10%)', fmt(sagAgent));
         sagHTML += rateLine('H&R Contribution (23.5%)', fmt(sagHR));
         sagHTML += `<div class="rate-total"><div class="rate-line rate-total">
           <span class="rate-label">Total Talent Cost</span>
@@ -422,32 +424,29 @@
         gvaaRange = GVAA_RADIO[market] || GVAA_RADIO['local'];
       }
 
-      // Run length modifier for GVAA (longer runs = higher end of range)
-      let gvaaNote = 'Suggested minimum — negotiable';
-      let gvaaLow = gvaaRange.low;
-      let gvaaHigh = gvaaRange.high;
+      // Always use high end only
+      let gvaaRate = gvaaRange.high;
 
       // Spot length: :15 typically lower
       if (spot === '15') {
-        gvaaLow = Math.round(gvaaLow * 0.7);
-        gvaaHigh = Math.round(gvaaHigh * 0.7);
-        gvaaNote = ':15 spot — approx. 70% of :30/:60 rate';
+        gvaaRate = Math.round(gvaaRate * 0.7);
       }
 
-      // Run length: longer runs push toward high end
+      // Run length: longer runs scale up
       if (run === '26wk' || run === '52wk') {
-        gvaaLow = Math.round(gvaaLow * 1.3);
-        gvaaHigh = Math.round(gvaaHigh * 1.5);
-        gvaaNote += ' · Extended run';
+        gvaaRate = Math.round(gvaaRate * 1.5);
       }
+
+      let gvaaAgent = Math.round(gvaaRate * 0.20);
+      let gvaaTotal = gvaaRate + gvaaAgent;
 
       let gvaaHTML = '';
-      gvaaHTML += rateLine('Rate Range (Low)', '$' + gvaaLow.toLocaleString());
-      gvaaHTML += rateLine('Rate Range (High)', '$' + gvaaHigh.toLocaleString());
-      gvaaHTML += `<div class="rate-line"><span class="rate-label" style="font-size:0.8rem;">${gvaaNote}</span><span class="rate-value" style="color:#555;font-size:0.8rem;">GVAA Guide</span></div>`;
+      gvaaHTML += rateLine('Talent Rate (GVAA)', '$' + gvaaRate.toLocaleString());
+      gvaaHTML += rateLine('Agent Fee (20%)', '$' + gvaaAgent.toLocaleString());
+      gvaaHTML += `<div class="rate-line"><span class="rate-label" style="font-size:0.8rem;">GVAA suggested rate · non-negotiable floor</span><span class="rate-value" style="color:#555;font-size:0.8rem;">GVAA Guide</span></div>`;
       gvaaHTML += `<div class="rate-total"><div class="rate-line rate-total">
-        <span class="rate-label">Typical Budget Range</span>
-        <span class="rate-value">$${gvaaLow.toLocaleString()} – $${gvaaHigh.toLocaleString()}</span>
+        <span class="rate-label">Total Talent Cost</span>
+        <span class="rate-value">$${gvaaTotal.toLocaleString()}</span>
       </div></div>`;
       gvaaHTML += '<div class="rate-line"><span class="rate-label" style="font-size:0.8rem;">No H&R required</span><span class="rate-value" style="color:#5cff9c;font-size:0.8rem;">Non-union</span></div>';
 
