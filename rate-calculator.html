@@ -186,6 +186,52 @@
 
     .field-hidden { display: none !important; }
 
+    .tip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      border: 1px solid #444;
+      color: #555;
+      font-size: 0.65rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-left: 5px;
+      position: relative;
+      vertical-align: middle;
+    }
+    .tip:hover { border-color: #5cff9c; color: #5cff9c; }
+    .tip:hover .tip-text { display: block; }
+    .tip-text {
+      display: none;
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 10px 13px;
+      font-size: 0.78rem;
+      color: #ccc;
+      line-height: 1.5;
+      width: 220px;
+      z-index: 100;
+      pointer-events: none;
+      font-weight: 400;
+    }
+    .tip-text::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 5px solid transparent;
+      border-top-color: #333;
+    }
+
     .union-toggle {
       background: none;
       border: none;
@@ -341,17 +387,23 @@
         <!-- Versions: Cut-downs, Lifts, Tags -->
         <div class="calc-row">
           <div class="calc-field">
-            <label>Cut-downs <span style="font-size:0.72rem;color:#555;font-weight:400;">50% usage each</span></label>
+            <label>Cut-downs <span style="font-size:0.72rem;color:#555;font-weight:400;">50% usage each</span>
+              <span class="tip">?<span class="tip-text">A cut-down is a shorter version created by editing an existing recording — e.g., trimming a :60 spot down to a :30. No new recording session required. Usage fee is 50% of the original spot.</span></span>
+            </label>
             <input type="number" id="num-cutdowns" min="0" max="20" value="0"
               style="background:#111;border:1px solid #2a2a2a;color:#f5f5f5;border-radius:8px;padding:10px 14px;font-size:0.95rem;width:100%;box-sizing:border-box;">
           </div>
           <div class="calc-field">
-            <label>Lifts <span style="font-size:0.72rem;color:#555;font-weight:400;">50% usage each</span></label>
+            <label>Lifts <span style="font-size:0.72rem;color:#555;font-weight:400;">50% usage each</span>
+              <span class="tip">?<span class="tip-text">A lift is a separately recorded shorter version — the talent records a fresh :15 or :30 based on the same campaign. Requires a new recording but is billed at 50% of the original usage fee.</span></span>
+            </label>
             <input type="number" id="num-lifts" min="0" max="20" value="0"
               style="background:#111;border:1px solid #2a2a2a;color:#f5f5f5;border-radius:8px;padding:10px 14px;font-size:0.95rem;width:100%;box-sizing:border-box;">
           </div>
           <div class="calc-field">
-            <label>Tags</label>
+            <label>Tags
+              <span class="tip">?<span class="tip-text">A tag is a short voiced addition at the end of a spot — phone number, location, call to action, or seasonal message (e.g. "Now through Sunday!"). Tags are billed separately from the main spot.</span></span>
+            </label>
             <input type="number" id="num-tags" min="0" max="20" value="0"
               style="background:#111;border:1px solid #2a2a2a;color:#f5f5f5;border-radius:8px;padding:10px 14px;font-size:0.95rem;width:100%;box-sizing:border-box;">
           </div>
