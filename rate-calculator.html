@@ -520,7 +520,7 @@
         } else {
           sagHTML = '<p class="no-rate">Rate not available. Contact us for a quote.</p>';
         }
-        noteHTML = '<strong>Radio rates</strong> are per spot, per talent. GVAA rates reflect the high end of the suggested guide. SAG-AFTRA rates effective April 1, 2025–March 31, 2026.';
+        noteHTML = '<strong>Radio rates</strong> are per spot, per talent. SAG-AFTRA rates effective April 1, 2025–March 31, 2026.';
       }
 
       // ── TV BROADCAST ──────────────────────────────────────────
@@ -637,7 +637,7 @@
 
       document.getElementById('gvaa-lines').innerHTML = gvaaHTML || '<p class="no-rate">Rate not available for this combination.</p>';
       document.getElementById('sag-lines').innerHTML = sagHTML || '<p class="no-rate">Rate not available. Contact us for a quote.</p>';
-      document.getElementById('calc-note').innerHTML = noteHTML + ' Rates shown are per talent (principal performer). Agent fees are shown separately. <strong>GVAA</strong> rates reflect the high end of the guide — the floor, not the ceiling. <strong>SAG-AFTRA</strong> rates are contractual minimums; H&R contribution (23.5%) is paid by the employer.';
+      document.getElementById('calc-note').innerHTML = noteHTML + ' Rates shown are per talent (principal performer). Agent fees are shown separately. <strong>SAG-AFTRA</strong> rates are contractual minimums (effective April 1, 2025–March 31, 2026); H&R contribution (23.5%) is paid by the employer. Talent must be a SAG-AFTRA member; producer must be a SAG signatory.';
 
       const el = document.getElementById('results');
       el.classList.add('visible');
