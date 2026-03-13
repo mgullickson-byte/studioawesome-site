@@ -186,6 +186,20 @@
 
     .field-hidden { display: none !important; }
 
+    .union-toggle {
+      background: none;
+      border: none;
+      color: #555;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 10px 22px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      letter-spacing: 0.03em;
+    }
+    .union-toggle:hover { background: #111; color: #ccc; }
+    .active-toggle { background: #1a1a1a !important; color: #f5f5f5 !important; }
+
     .add-spot-row {
       display: flex;
       align-items: center;
@@ -236,6 +250,13 @@
     <div class="calc-wrap">
       <h1>VO Rate Calculator</h1>
       <p class="calc-subtitle">Compare SAG-AFTRA union scale against real-world non-union market rates — sourced from thousands of actual productions on Select Casting.</p>
+
+      <!-- Union / Non-Union / Both toggle -->
+      <div style="display:flex;gap:0;margin-bottom:28px;border:1px solid #222;border-radius:10px;overflow:hidden;width:fit-content;">
+        <button id="toggle-nu"  onclick="setUnionMode('non-union')" class="union-toggle active-toggle">Non-Union</button>
+        <button id="toggle-both" onclick="setUnionMode('both')"     class="union-toggle" style="border-left:1px solid #222;border-right:1px solid #222;">Both</button>
+        <button id="toggle-sag" onclick="setUnionMode('union')"     class="union-toggle">Union</button>
+      </div>
 
       <div class="calc-form">
         <div class="calc-row">
@@ -630,7 +651,46 @@
       </div>`;
     }
 
-    // ─── UI TOGGLE ────────────────────────────────────────────────
+    // ─── UNION MODE TOGGLE ───────────────────────────────────────
+
+    let unionMode = 'non-union'; // 'non-union' | 'union' | 'both'
+
+    function setUnionMode(mode) {
+      unionMode = mode;
+      ['nu','both','sag'].forEach(id => document.getElementById('toggle-' + id)?.classList.remove('active-toggle'));
+      const map = { 'non-union': 'nu', 'both': 'both', 'union': 'sag' };
+      document.getElementById('toggle-' + map[mode])?.classList.add('active-toggle');
+      // Update subtitle
+      const subtitles = {
+        'non-union': 'Real-world non-union market rates — sourced from thousands of actual productions on Select Casting.',
+        'union': 'SAG-AFTRA union scale rates — 2025 Commercials Contract.',
+        'both': 'Compare SAG-AFTRA union scale against real-world non-union market rates side by side.'
+      };
+      document.querySelector('.calc-subtitle').textContent = subtitles[mode];
+      // Re-render results if already calculated
+      if (document.getElementById('results').classList.contains('visible')) calculate();
+    }
+
+    function applyUnionMode() {
+      const nuCard  = document.getElementById('card-gvaa');
+      const sagCard = document.getElementById('card-sag');
+      const grid    = document.querySelector('.results-grid');
+      if (unionMode === 'non-union') {
+        nuCard.style.display  = '';
+        sagCard.style.display = 'none';
+        grid.style.gridTemplateColumns = '1fr';
+      } else if (unionMode === 'union') {
+        nuCard.style.display  = 'none';
+        sagCard.style.display = '';
+        grid.style.gridTemplateColumns = '1fr';
+      } else {
+        nuCard.style.display  = '';
+        sagCard.style.display = '';
+        grid.style.gridTemplateColumns = '';
+      }
+    }
+
+    // ─── UI TOGGLE ───────────────────────────────────────────────
 
     function onCategoryChange() {
       const cat = document.getElementById('category').value;
@@ -865,6 +925,8 @@
       document.getElementById('gvaa-lines').innerHTML = gvaaHTML || '<p class="no-rate">Rate not available for this combination.</p>';
       document.getElementById('sag-lines').innerHTML = sagHTML || '<p class="no-rate">Rate not available. Contact us for a quote.</p>';
       document.getElementById('calc-note').innerHTML = noteHTML + ' Rates shown are per talent (principal performer). <strong>Market Rate</strong> is based on the 75th percentile of real non-union productions posted on Select Casting — TV and Radio use the last 2 years of data (2024–2026); Digital and Industrial use all available data for larger sample accuracy. Rates are derived from productions where talent budgets were explicitly documented; projects with undisclosed or negotiated-offline budgets are not included. Rates represent what well-compensated talent on professional productions actually earns, floored at industry guidelines where market data runs lower. <strong>SAG-AFTRA</strong> rates are contractual minimums (effective April 1, 2025–March 31, 2026); H&R contribution (23.5%) is paid by the employer on top of talent fees. Talent must be a SAG-AFTRA member; producer must be a SAG signatory.';
+
+      applyUnionMode();
 
       const el = document.getElementById('results');
       el.classList.add('visible');
