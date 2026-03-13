@@ -549,7 +549,7 @@
     </table>
 
     <div class="sc-note-box" style="margin-top:32px;">
-      <strong>Source:</strong> Select Casting platform data (2019–March 2026). 1,064 non-union records in the last 2 years used for TV and Radio rates; full dataset used for Digital and Industrial. Session and usage fees analyzed separately; records below $150 excluded. TV and Radio rates use last 2 years of data (2024–2026); Digital and Industrial use full dataset for larger sample accuracy.
+      <strong>Source:</strong> Select Casting platform data (2019–March 2026). 1,064 non-union records in the last 2 years used for TV and Digital rates; Radio uses GVAA by market tier (SC data cannot distinguish local vs. national); full dataset used for Industrial. Session and usage fees analyzed separately; records below $150 excluded. TV and Radio rates use last 2 years of data (2024–2026); Digital and Industrial use full dataset for larger sample accuracy.
     </div>
   </div>
   </section>
@@ -641,11 +641,10 @@
 
     const SC_SESSION = 500; // Flat; covers 2-hr session + all reads
 
-    // Radio: 75th percentile, LAST 2 YEARS data (2024–2026, n=207 non-union records)
-    // Radio rates have risen ~33% vs all-time — 2yr data is more accurate
-    // allthree/national: GVAA $2500 floors SC
+    // Radio: SC data cannot distinguish market tiers — using GVAA as the accurate reference.
+    // SC data is blended across all tiers and overstates local rates.
     const SC_RADIO = {
-      local: 1000, ny: 1000, chila: 1000, twomajors: 1250, allthree: 2500, national: 2500
+      local: 350, ny: 750, chila: 750, twomajors: 750, allthree: 2500, national: 2500
     };
 
     // TV Broadcast: 75th percentile, LAST 2 YEARS data (2024–2026, n=173)
@@ -976,7 +975,7 @@
 
       document.getElementById('gvaa-lines').innerHTML = gvaaHTML || '<p class="no-rate">Rate not available for this combination.</p>';
       document.getElementById('sag-lines').innerHTML = sagHTML || '<p class="no-rate">Rate not available. Contact us for a quote.</p>';
-      document.getElementById('calc-note').innerHTML = noteHTML + ' Rates shown are per talent (principal performer). <strong>Market Rate</strong> is based on the 75th percentile of real non-union productions posted on Select Casting — TV and Radio use the last 2 years of data (2024–2026); Digital and Industrial use all available data for larger sample accuracy. Rates are derived from productions where talent budgets were explicitly documented; projects with undisclosed or negotiated-offline budgets are not included. Rates represent what well-compensated talent on professional productions actually earns, floored at industry guidelines where market data runs lower. <strong>SAG-AFTRA</strong> rates are contractual minimums (effective April 1, 2025–March 31, 2026); H&R contribution (23.5%) is paid by the employer on top of talent fees. Talent must be a SAG-AFTRA member; producer must be a SAG signatory.';
+      document.getElementById('calc-note').innerHTML = noteHTML + ' Rates shown are per talent (principal performer). <strong>Market Rate</strong> is based on the 75th percentile of real non-union productions posted on Select Casting — TV and Digital use Select Casting data (2024–2026); Radio uses GVAA rates by market tier (SC data cannot distinguish local vs. national); Industrial uses full SC dataset. Rates are derived from productions where talent budgets were explicitly documented; projects with undisclosed or negotiated-offline budgets are not included. Rates represent what well-compensated talent on professional productions actually earns, floored at industry guidelines where market data runs lower. <strong>SAG-AFTRA</strong> rates are contractual minimums (effective April 1, 2025–March 31, 2026); H&R contribution (23.5%) is paid by the employer on top of talent fees. Talent must be a SAG-AFTRA member; producer must be a SAG signatory.';
 
       applyUnionMode();
 
