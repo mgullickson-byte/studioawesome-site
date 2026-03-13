@@ -806,18 +806,17 @@
 
       // ── RADIO ─────────────────────────────────────────────────
       if (cat === 'radio') {
-        // GVAA usage rates by market tier; session fee ($500) shown separately — confirmed by SC data (376 radio records show explicit session fee)
+        // GVAA rates — all-in (session included); used as-is by market tier
         let gvaaBase = SC_RADIO[radioMarket] || 350;
         if (spot === '15') gvaaBase = Math.round(gvaaBase * 0.7);
         if (radioRun === '26wk' || radioRun === '52wk') gvaaBase = Math.round(gvaaBase * 1.5);
         window._nuUsage = gvaaBase;
-        window._nuSessionIncluded = false;
-        const scSession = SC_SESSION;
-        const gvaaAgent = Math.round((scSession + gvaaBase) * AGENT_NONUNION);
-        const gvaaTotal = scSession + gvaaBase + gvaaAgent;
-        gvaaHTML = rl('Session Fee', fmtInt(scSession));
-        gvaaHTML += rl('Usage Fee (GVAA)', fmtInt(gvaaBase));
+        window._nuSessionIncluded = true;
+        const gvaaAgent = Math.round(gvaaBase * AGENT_NONUNION);
+        const gvaaTotal = gvaaBase + gvaaAgent;
+        gvaaHTML = rl('Talent Fee (GVAA)', fmtInt(gvaaBase));
         gvaaHTML += rl('Agent Fee (20%)', fmtInt(gvaaAgent));
+        gvaaHTML += rl('Session included in rate', '✓', false, true);
         gvaaHTML += rl('No H&R required', '✓ Non-union', false, true);
         gvaaHTML += totalBlock('Total Talent Cost', fmtInt(gvaaTotal), false);
 
