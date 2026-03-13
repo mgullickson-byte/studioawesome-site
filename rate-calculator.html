@@ -4,12 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>VO Rate Calculator — Studio Awesome</title>
-  <meta name="description" content="Calculate union (SAG-AFTRA) and non-union (GVAA) voiceover talent rates for radio and audio commercials. Compare side by side." />
+  <meta name="description" content="Calculate union (SAG-AFTRA) and non-union (GVAA) voiceover talent rates for radio, TV, digital, industrial, and commercial narration. Compare side by side." />
   <link rel="icon" href="favicon.ico" />
   <link rel="stylesheet" href="styles.css" />
   <style>
     .calc-wrap {
-      max-width: 860px;
+      max-width: 900px;
       margin: 0 auto;
       padding: 60px 24px 80px;
     }
@@ -19,7 +19,7 @@
       color: #f5f5f5;
       margin-bottom: 8px;
     }
-    .calc-wrap .calc-subtitle {
+    .calc-subtitle {
       color: #8c8c8c;
       font-size: 1rem;
       margin-bottom: 48px;
@@ -37,8 +37,9 @@
       gap: 24px;
       margin-bottom: 24px;
     }
-    @media (max-width: 600px) {
-      .calc-row { grid-template-columns: 1fr; }
+    .calc-row.three { grid-template-columns: 1fr 1fr 1fr; }
+    @media (max-width: 640px) {
+      .calc-row, .calc-row.three { grid-template-columns: 1fr; }
       .calc-form { padding: 24px; }
     }
     .calc-field {
@@ -47,9 +48,9 @@
       gap: 8px;
     }
     .calc-field label {
-      font-size: 0.8rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
       color: #8c8c8c;
     }
@@ -71,8 +72,11 @@
       outline: none;
       border-color: #5cff9c;
     }
+    .calc-field select:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
     .calc-btn {
-      display: inline-block;
       background: #5cff9c;
       color: #000;
       font-weight: 700;
@@ -88,98 +92,99 @@
     .calc-btn:hover { opacity: 0.85; }
 
     /* Results */
-    .calc-results {
-      display: none;
+    .calc-results { display: none; }
+    .calc-results.visible { display: block; }
+
+    .compare-tag {
+      display: inline-block;
+      background: #5cff9c15;
+      border: 1px solid #5cff9c33;
+      color: #5cff9c;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-bottom: 16px;
     }
-    .calc-results.visible {
-      display: block;
+    .results-heading {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #f5f5f5;
+      margin-bottom: 24px;
     }
     .results-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 20px;
-      margin-bottom: 32px;
+      margin-bottom: 28px;
     }
-    @media (max-width: 600px) {
-      .results-grid { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 600px) { .results-grid { grid-template-columns: 1fr; } }
+
     .result-card {
       background: #050505;
       border: 1px solid #222;
       border-radius: 16px;
       padding: 28px;
     }
-    .result-card.union {
-      border-color: #5cff9c33;
-    }
-    .result-card .card-label {
-      font-size: 0.75rem;
+    .result-card.union { border-color: #5cff9c33; }
+    .card-label {
+      font-size: 0.72rem;
       font-weight: 700;
       letter-spacing: 0.1em;
       text-transform: uppercase;
       color: #8c8c8c;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
-    .result-card .card-title {
+    .card-title {
       font-size: 1rem;
       font-weight: 600;
       color: #f5f5f5;
       margin-bottom: 20px;
     }
     .result-card.union .card-title { color: #5cff9c; }
+
     .rate-line {
       display: flex;
       justify-content: space-between;
       align-items: baseline;
-      padding: 10px 0;
+      padding: 9px 0;
       border-bottom: 1px solid #1a1a1a;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
+      gap: 12px;
     }
     .rate-line:last-child { border-bottom: none; }
-    .rate-line .rate-label { color: #8c8c8c; }
-    .rate-line .rate-value { color: #f5f5f5; font-weight: 600; }
-    .rate-line .rate-value.accent { color: #5cff9c; }
-    .rate-total {
-      margin-top: 20px;
-      padding-top: 16px;
+    .rate-label { color: #8c8c8c; flex: 1; }
+    .rate-value { color: #f5f5f5; font-weight: 600; white-space: nowrap; }
+    .rate-value.accent { color: #5cff9c; }
+    .rate-note { font-size: 0.78rem; color: #555; font-style: italic; }
+
+    .rate-total-block {
+      margin-top: 16px;
+      padding-top: 14px;
       border-top: 1px solid #333;
     }
-    .rate-total .rate-label { color: #f5f5f5; font-weight: 600; }
-    .rate-total .rate-value { font-size: 1.1rem; color: #5cff9c; }
+    .rate-total-block .rate-line {
+      padding: 6px 0;
+      border-bottom: none;
+    }
+    .rate-total-block .rate-label { color: #f5f5f5; font-weight: 600; font-size: 0.95rem; }
+    .rate-total-block .rate-value { font-size: 1.05rem; color: #5cff9c; }
+    .rate-total-block .non-union .rate-value { color: #f5f5f5; }
 
     .calc-note {
       background: #050505;
       border: 1px solid #222;
       border-radius: 12px;
       padding: 20px 24px;
-      font-size: 0.85rem;
+      font-size: 0.83rem;
       color: #8c8c8c;
-      line-height: 1.6;
+      line-height: 1.7;
     }
     .calc-note strong { color: #f5f5f5; }
-    .compare-tag {
-      display: inline-block;
-      background: #5cff9c15;
-      border: 1px solid #5cff9c33;
-      color: #5cff9c;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      padding: 4px 10px;
-      border-radius: 20px;
-      margin-bottom: 24px;
-    }
-    .results-heading {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #f5f5f5;
-      margin-bottom: 20px;
-    }
-    .no-rate {
-      color: #555;
-      font-style: italic;
-      font-size: 0.85rem;
-    }
+    .no-rate { color: #555; font-style: italic; font-size: 0.85rem; padding: 8px 0; }
+
+    .field-hidden { display: none !important; }
   </style>
 </head>
 <body>
@@ -202,42 +207,22 @@
   <main>
     <div class="calc-wrap">
       <h1>VO Rate Calculator</h1>
-      <p class="calc-subtitle">Compare union (SAG-AFTRA) and non-union (GVAA) talent rates side by side. 2025 rates.</p>
+      <p class="calc-subtitle">Compare union (SAG-AFTRA) and non-union (GVAA) talent rates side by side. Based on 2025 rates.</p>
 
       <div class="calc-form">
         <div class="calc-row">
           <div class="calc-field">
-            <label>Medium</label>
-            <select id="medium">
-              <option value="radio">Radio</option>
-              <option value="digital">Digital / Streaming Audio</option>
-              <option value="national">National Network Radio</option>
+            <label>Category</label>
+            <select id="category" onchange="onCategoryChange()">
+              <option value="radio">Radio Commercial</option>
+              <option value="tv">TV Broadcast Commercial</option>
+              <option value="digital">Digital / Online / Streaming</option>
+              <option value="industrial">Industrial / Corporate Narration</option>
+              <option value="tagline">Tagline / Tag</option>
+              <option value="elearning">E-Learning / Training</option>
             </select>
           </div>
-          <div class="calc-field">
-            <label>Market</label>
-            <select id="market">
-              <option value="local">Local (single market, no majors)</option>
-              <option value="ny">New York only</option>
-              <option value="chila">Chicago or LA only</option>
-              <option value="twomajors">Two of NY / Chicago / LA</option>
-              <option value="allthree">All Three — NY + Chicago + LA</option>
-              <option value="national">National</option>
-            </select>
-          </div>
-        </div>
-        <div class="calc-row">
-          <div class="calc-field">
-            <label>Run Length</label>
-            <select id="runlength">
-              <option value="4wk">4 Weeks</option>
-              <option value="8wk" selected>8 Weeks</option>
-              <option value="13wk">13 Weeks</option>
-              <option value="26wk">26 Weeks / 6 Months</option>
-              <option value="52wk">52 Weeks / 1 Year</option>
-            </select>
-          </div>
-          <div class="calc-field">
+          <div class="calc-field" id="field-spotlength">
             <label>Spot Length</label>
             <select id="spotlength">
               <option value="60">:60</option>
@@ -245,218 +230,422 @@
               <option value="15">:15</option>
             </select>
           </div>
+          <div class="calc-field field-hidden" id="field-scriptlength">
+            <label>Script / Content Length</label>
+            <select id="scriptlength">
+              <option value="1-2">1–2 minutes</option>
+              <option value="3-5">3–5 minutes</option>
+              <option value="5-10">5–10 minutes</option>
+              <option value="10-15">10–15 minutes</option>
+              <option value="15-20">15–20 minutes</option>
+              <option value="20-30">20–30 minutes</option>
+              <option value="30-60">30–60 minutes</option>
+            </select>
+          </div>
         </div>
+
+        <div class="calc-row" id="row-market-run">
+          <div class="calc-field" id="field-market">
+            <label>Market</label>
+            <select id="market">
+              <option value="local">Local (single market)</option>
+              <option value="regional">Regional (multi-market)</option>
+              <option value="cablenational">Cable / National (no majors)</option>
+              <option value="national">National</option>
+            </select>
+          </div>
+          <div class="calc-field" id="field-runlength">
+            <label>Usage / Run Length</label>
+            <select id="runlength">
+              <option value="3mo">3 Months (13 weeks)</option>
+              <option value="6mo">6 Months (26 weeks)</option>
+              <option value="12mo">12 Months (52 weeks)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Radio-specific run options -->
+        <div class="calc-row field-hidden" id="row-radio-run">
+          <div class="calc-field">
+            <label>Market</label>
+            <select id="radio-market">
+              <option value="local">Local (no major markets)</option>
+              <option value="ny">New York only</option>
+              <option value="chila">Chicago or LA only</option>
+              <option value="twomajors">Two of NY / Chicago / LA</option>
+              <option value="allthree">All Three — NY + Chicago + LA</option>
+              <option value="national">National Network</option>
+            </select>
+          </div>
+          <div class="calc-field">
+            <label>Run Length</label>
+            <select id="radio-run">
+              <option value="4wk">4 Weeks</option>
+              <option value="8wk" selected>8 Weeks</option>
+              <option value="13wk">13 Weeks</option>
+              <option value="26wk">6 Months</option>
+              <option value="52wk">52 Weeks / 1 Year</option>
+            </select>
+          </div>
+        </div>
+
         <button class="calc-btn" onclick="calculate()">Calculate Rates</button>
       </div>
 
       <div class="calc-results" id="results">
         <div class="compare-tag">SIDE-BY-SIDE COMPARISON</div>
-        <div class="results-heading" id="results-heading">Results</div>
+        <div class="results-heading" id="results-heading"></div>
         <div class="results-grid">
-          <!-- Non-Union -->
-          <div class="result-card">
+          <div class="result-card" id="card-gvaa">
             <div class="card-label">Non-Union</div>
             <div class="card-title">GVAA Rate Guide</div>
             <div id="gvaa-lines"></div>
           </div>
-          <!-- Union -->
-          <div class="result-card union">
+          <div class="result-card union" id="card-sag">
             <div class="card-label">Union</div>
             <div class="card-title">SAG-AFTRA 2025</div>
             <div id="sag-lines"></div>
           </div>
         </div>
-
-        <div class="calc-note">
-          <strong>GVAA rates</strong> reflect the high end of the suggested rate guide for non-union talent, plus a <strong>20% agent fee</strong>. <strong>SAG-AFTRA rates</strong> are contractual minimums (effective April 1, 2025 – March 31, 2026) and are non-negotiable, plus a <strong>10% agent fee</strong> and <strong>23.5% H&R (Health & Retirement)</strong> contribution by the employer. Talent must be a SAG-AFTRA member; producer must be a SAG signatory. Rates shown are per talent (principal performer).
-        </div>
+        <div class="calc-note" id="calc-note"></div>
       </div>
     </div>
   </main>
 
   <footer class="sa-footer">
     <div class="sa-footer-inner">
-      <span class="sa-footer-copy" style="opacity:0.18; font-size:0.75rem;">© 2025 Studio Awesome. All rights reserved.</span>
+      <span class="sa-footer-copy" style="opacity:0.18;font-size:0.75rem;">© 2025 Studio Awesome. All rights reserved.</span>
     </div>
   </footer>
 
   <script>
-    // SAG-AFTRA 2025 Audio Commercials — Wild Spot rates
-    const SAG_WILD = {
-      // [8wk, 13wk]
-      local:     [365.00, 365.00],
-      ny:        [437.14, 546.46],
-      chila:     [396.52, 495.62],
-      twomajors: [533.22, 666.53],
-      allthree:  [673.73, 842.17],
+    // ─── RATE DATA ────────────────────────────────────────────────
+
+    // SAG-AFTRA 2025 Audio Commercials — Radio Wild Spot
+    const SAG_RADIO_WILD = {
+      local:     { '4wk': 365.00, '8wk': 365.00, '13wk': 365.00, '26wk': 365.00, '52wk': 365.00 },
+      ny:        { '4wk': 437.14, '8wk': 437.14, '13wk': 546.46, '26wk': 546.46, '52wk': 546.46 },
+      chila:     { '4wk': 396.52, '8wk': 396.52, '13wk': 495.62, '26wk': 495.62, '52wk': 495.62 },
+      twomajors: { '4wk': 533.22, '8wk': 533.22, '13wk': 666.53, '26wk': 666.53, '52wk': 666.53 },
+      allthree:  { '4wk': 673.73, '8wk': 673.73, '13wk': 842.17, '26wk': 842.17, '52wk': 842.17 },
+    };
+    const SAG_RADIO_NATIONAL = {
+      '4wk': 808.49, '8wk': 1328.23, '13wk': 1674.72, '26wk': 2483.21, '52wk': 4273.43
     };
 
-    // SAG National Terrestrial
-    const SAG_NATIONAL = {
-      '4wk':  808.49,
-      '8wk':  1328.23,
-      '13wk': 1674.72,
-      '26wk': 2483.21,
-      '52wk': 4273.43,
+    // SAG-AFTRA 2025 TV Commercials — Off-Camera VO (session + use)
+    const SAG_TV_SESSION = 618.30;
+    const SAG_TV_USE = {
+      local:       { '3mo': 600.00,  '6mo': 1200.00, '12mo': 2250.00 },  // local cable ~1M subs as proxy
+      regional:    { '3mo': 866.25,  '6mo': 1575.00, '12mo': 3150.00 },  // wild spot ex majors
+      cablenational:{ '3mo': 1575.00, '6mo': 3075.00, '12mo': 5670.00 }, // national cable / all markets
+      national:    { '3mo': 1980.55, '6mo': 3937.50, '12mo': 10125.00 }, // network / national cable
     };
 
-    // SAG Digital (Traditional Digital)
-    const SAG_DIGITAL = {
-      '4wk':  469.92,
-      '8wk':  499.99,
-      '13wk': null,
-      '26wk': null,
-      '52wk': 1315.76,
+    // SAG-AFTRA 2025 Digital (TV Commercials contract, streaming/digital)
+    const SAG_DIGITAL_SESSION = 618.30;
+    const SAG_DIGITAL_USE = {
+      local:        { '3mo': 588.00,  '6mo': 975.00,  '12mo': 2856.00  }, // trad digital w/ YT
+      regional:     { '3mo': 750.00,  '6mo': 1250.00, '12mo': 3200.00  },
+      cablenational:{ '3mo': 975.00,  '6mo': 2250.00, '12mo': 7500.00  }, // streaming platforms
+      national:     { '3mo': 975.00,  '6mo': 2250.00, '12mo': 7500.00  },
     };
 
-    // GVAA non-union radio ranges
-    const GVAA_RADIO = {
-      local:     { low: 150, high: 350 },
-      ny:        { low: 300, high: 750 },  // treat as regional
-      chila:     { low: 300, high: 750 },
-      twomajors: { low: 300, high: 750 },
-      allthree:  { low: 750, high: 2500 }, // national
-      national:  { low: 750, high: 2500 },
+    // GVAA TV Broadcast (high end)
+    const GVAA_TV = {
+      local:        { '3mo': 500,   '6mo': 1000,  '12mo': 1500 },
+      regional:     { '3mo': 650,   '6mo': 1300,  '12mo': 1800 },
+      cablenational:{ '3mo': 1250,  '6mo': 2200,  '12mo': 2800 },
+      national:     { '3mo': 1400,  '6mo': 2800,  '12mo': 3500 },
     };
 
+    // GVAA Digital/Online (high end)
     const GVAA_DIGITAL = {
-      local:     { low: 150, high: 350 },
-      ny:        { low: 250, high: 600 },
-      chila:     { low: 250, high: 600 },
-      twomajors: { low: 400, high: 900 },
-      allthree:  { low: 500, high: 1500 },
-      national:  { low: 500, high: 1500 },
+      local:        { '3mo': 500,   '6mo': 1000,  '12mo': 1500 },
+      regional:     { '3mo': 750,   '6mo': 1250,  '12mo': 1800 },
+      cablenational:{ '3mo': 1000,  '6mo': 2000,  '12mo': 2800 },
+      national:     { '3mo': 1250,  '6mo': 2500,  '12mo': 3200 },
+    };
+
+    // GVAA Radio (high end per spot)
+    const GVAA_RADIO = {
+      local: 350, ny: 750, chila: 750, twomajors: 750, allthree: 2500, national: 2500
+    };
+
+    // GVAA Tagline — TV (high end)
+    const GVAA_TAGLINE_TV = {
+      local:        { '3mo': 200,  '6mo': 400,  '12mo': 500 },
+      regional:     { '3mo': 250,  '6mo': 500,  '12mo': 600 },
+      cablenational:{ '3mo': 300,  '6mo': 600,  '12mo': 750 },
+      national:     { '3mo': 350,  '6mo': 700,  '12mo': 900 },
+    };
+
+    // GVAA Industrial / Corporate Narration (high end, by script length)
+    const GVAA_INDUSTRIAL = {
+      '1-2':  450, '3-5':  550, '5-10': 700,
+      '10-15': 800, '15-20': 950, '20-30': 1250, '30-60': 2350
+    };
+
+    // GVAA E-Learning (per finished minute, high end)
+    const GVAA_ELEARNING_PFM = 55;  // per finished minute
+    const ELEARNING_LENGTHS = {
+      '1-2': 2, '3-5': 5, '5-10': 10, '10-15': 15, '15-20': 20, '20-30': 30, '30-60': 60
     };
 
     const HR_RATE = 0.235;
+    const AGENT_UNION = 0.10;
+    const AGENT_NONUNION = 0.20;
 
     function fmt(n) {
-      if (n === null || n === undefined) return null;
+      if (n == null) return null;
       return '$' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     }
+    function fmtInt(n) {
+      return '$' + Math.round(n).toLocaleString();
+    }
 
-    function rateLine(label, value, accent) {
-      if (value === null) return '';
+    function rl(label, value, accent, small) {
+      if (value == null) return '';
+      const cls = accent ? ' accent' : '';
+      const sz = small ? ' style="font-size:0.8rem;color:#555;"' : '';
       return `<div class="rate-line">
         <span class="rate-label">${label}</span>
-        <span class="rate-value${accent ? ' accent' : ''}">${value}</span>
+        <span class="rate-value${cls}"${sz}>${value}</span>
       </div>`;
     }
 
+    function totalBlock(label, value, union) {
+      return `<div class="rate-total-block ${union ? '' : 'non-union'}">
+        <div class="rate-line">
+          <span class="rate-label">${label}</span>
+          <span class="rate-value${union ? ' accent' : ''}">${value}</span>
+        </div>
+      </div>`;
+    }
+
+    // ─── UI TOGGLE ────────────────────────────────────────────────
+
+    function onCategoryChange() {
+      const cat = document.getElementById('category').value;
+      const isRadio = cat === 'radio';
+      const isIndustrial = cat === 'industrial' || cat === 'elearning';
+      const isTagline = cat === 'tagline';
+
+      // Radio uses its own market/run row
+      document.getElementById('row-radio-run').classList.toggle('field-hidden', !isRadio);
+      document.getElementById('row-market-run').classList.toggle('field-hidden', isRadio);
+
+      // Spot length: hidden for industrial/elearning
+      document.getElementById('field-spotlength').classList.toggle('field-hidden', isIndustrial);
+      // Script length: shown for industrial/elearning
+      document.getElementById('field-scriptlength').classList.toggle('field-hidden', !isIndustrial);
+
+      // Market hidden for industrial/elearning
+      document.getElementById('field-market').classList.toggle('field-hidden', isIndustrial);
+    }
+
+    // ─── CALCULATE ────────────────────────────────────────────────
+
     function calculate() {
-      const medium = document.getElementById('medium').value;
+      const cat = document.getElementById('category').value;
+      const spot = document.getElementById('spotlength').value;
+      const script = document.getElementById('scriptlength').value;
       const market = document.getElementById('market').value;
       const run = document.getElementById('runlength').value;
-      const spot = document.getElementById('spotlength').value;
+      const radioMarket = document.getElementById('radio-market').value;
+      const radioRun = document.getElementById('radio-run').value;
 
-      // --- Build heading ---
-      const marketLabels = {
-        local: 'Local Market',
-        ny: 'New York',
-        chila: 'Chicago or LA',
-        twomajors: 'Two Major Markets',
-        allthree: 'All Three Majors',
-        national: 'National'
+      const catLabels = {
+        radio: 'Radio Commercial', tv: 'TV Broadcast Commercial',
+        digital: 'Digital / Online / Streaming', industrial: 'Industrial / Corporate Narration',
+        tagline: 'TV Tagline', elearning: 'E-Learning / Training'
       };
-      const runLabels = { '4wk':'4 Weeks','8wk':'8 Weeks','13wk':'13 Weeks','26wk':'26 Weeks','52wk':'52 Weeks' };
-      const medLabels = { radio:'Radio', digital:'Digital Audio', national:'National Network Radio' };
-      document.getElementById('results-heading').textContent =
-        `:${spot} ${medLabels[medium]} — ${marketLabels[market]} — ${runLabels[run]}`;
+      const marketLabels = {
+        local: 'Local Market', regional: 'Regional Market',
+        cablenational: 'Cable / National (no majors)', national: 'National Market'
+      };
+      const radioMktLabels = {
+        local: 'Local (no majors)', ny: 'New York', chila: 'Chicago or LA',
+        twomajors: 'Two Major Markets', allthree: 'All Three Majors', national: 'National Network'
+      };
+      const runLabels = { '3mo': '3 Months', '6mo': '6 Months', '12mo': '12 Months' };
+      const radioRunLabels = {
+        '4wk': '4 Weeks', '8wk': '8 Weeks', '13wk': '13 Weeks', '26wk': '6 Months', '52wk': '52 Weeks'
+      };
+      const scriptLabels = {
+        '1-2': '1–2 min', '3-5': '3–5 min', '5-10': '5–10 min',
+        '10-15': '10–15 min', '15-20': '15–20 min', '20-30': '20–30 min', '30-60': '30–60 min'
+      };
 
-      // --- SAG ---
-      let sagBase = null;
-      let sagNote = '';
+      let heading = catLabels[cat];
+      if (cat === 'radio') heading += ` — ${radioMktLabels[radioMarket]} — ${radioRunLabels[radioRun]}`;
+      else if (cat === 'industrial' || cat === 'elearning') heading += ` — ${scriptLabels[script]}`;
+      else heading += ` — ${marketLabels[market]} — ${runLabels[run]}`;
+      if (cat !== 'industrial' && cat !== 'elearning') heading = `:${spot} ${heading}`;
+      document.getElementById('results-heading').textContent = heading;
 
-      if (medium === 'radio') {
-        if (market === 'national') {
-          sagBase = SAG_NATIONAL[run] || null;
-          sagNote = 'National terrestrial radio';
+      let gvaaHTML = '', sagHTML = '', noteHTML = '';
+
+      // ── RADIO ─────────────────────────────────────────────────
+      if (cat === 'radio') {
+        // GVAA
+        let gvaaBase = GVAA_RADIO[radioMarket] || 350;
+        if (spot === '15') gvaaBase = Math.round(gvaaBase * 0.7);
+        if (radioRun === '26wk' || radioRun === '52wk') gvaaBase = Math.round(gvaaBase * 1.5);
+        const gvaaAgent = Math.round(gvaaBase * AGENT_NONUNION);
+        const gvaaTotal = gvaaBase + gvaaAgent;
+        gvaaHTML = rl('Talent Rate (GVAA)', fmtInt(gvaaBase));
+        gvaaHTML += rl('Agent Fee (20%)', fmtInt(gvaaAgent));
+        gvaaHTML += rl('No H&R required', '✓ Non-union', false, true);
+        gvaaHTML += totalBlock('Total Talent Cost', fmtInt(gvaaTotal), false);
+
+        // SAG
+        let sagBase = null;
+        if (radioMarket === 'national') {
+          sagBase = SAG_RADIO_NATIONAL[radioRun] || null;
         } else {
-          // Wild spot
-          const wildRates = SAG_WILD[market];
-          if (wildRates) {
-            if (run === '8wk' || run === '4wk') {
-              sagBase = wildRates[0]; // 8-week rate
-              sagNote = '8-Week Wild Spot';
-            } else if (run === '13wk' || run === '26wk' || run === '52wk') {
-              sagBase = wildRates[1]; // 13-week rate
-              sagNote = '13-Week Wild Spot';
-            }
-          }
+          sagBase = SAG_RADIO_WILD[radioMarket]?.[radioRun] || null;
         }
-      } else if (medium === 'digital') {
-        sagBase = SAG_DIGITAL[run] || null;
-        sagNote = 'Traditional Digital';
-      } else if (medium === 'national') {
-        sagBase = SAG_NATIONAL[run] || null;
-        sagNote = 'National Terrestrial';
+        if (spot === '15' && sagBase) {
+          sagHTML += rl(':15 spot', 'Same rate as :30/:60 for audio', false, true);
+        }
+        if (sagBase) {
+          const sagAgent = sagBase * AGENT_UNION;
+          const sagHR = sagBase * HR_RATE;
+          const sagTotal = sagBase + sagAgent + sagHR;
+          sagHTML += rl('Session + Use Fee', fmt(sagBase));
+          sagHTML += rl('Agent Fee (10%)', fmt(sagAgent));
+          sagHTML += rl('H&R Contribution (23.5%)', fmt(sagHR));
+          sagHTML += totalBlock('Total Talent Cost', fmt(sagTotal), true);
+        } else {
+          sagHTML = '<p class="no-rate">Rate not available. Contact us for a quote.</p>';
+        }
+        noteHTML = '<strong>Radio rates</strong> are per spot, per talent. GVAA rates reflect the high end of the suggested guide. SAG-AFTRA rates effective April 1, 2025–March 31, 2026.';
       }
 
-      // Spot length modifier for SAG (:15 = 50% of :30/:60 in some contracts, but audio wild spot doesn't differentiate — note it)
-      let sagSpotNote = spot === '15' ? '<div class="rate-line"><span class="rate-label">:15 spot</span><span class="rate-value" style="color:#8c8c8c;font-size:0.82rem;">Same rate as :30/:60 for audio wild spot</span></div>' : '';
+      // ── TV BROADCAST ──────────────────────────────────────────
+      else if (cat === 'tv') {
+        // GVAA
+        let gvaaBase = GVAA_TV[market]?.[run] || null;
+        if (gvaaBase && spot === '15') gvaaBase = Math.round(gvaaBase * 0.7);
+        if (gvaaBase) {
+          const gvaaAgent = Math.round(gvaaBase * AGENT_NONUNION);
+          const gvaaTotal = gvaaBase + gvaaAgent;
+          gvaaHTML = rl('Talent Rate (GVAA)', fmtInt(gvaaBase));
+          gvaaHTML += rl('Agent Fee (20%)', fmtInt(gvaaAgent));
+          gvaaHTML += rl('No H&R required', '✓ Non-union', false, true);
+          gvaaHTML += totalBlock('Total Talent Cost', fmtInt(gvaaTotal), false);
+        }
 
-      let sagAgent = sagBase ? sagBase * 0.10 : null;
-      let sagHR = sagBase ? sagBase * HR_RATE : null;
-      let sagTotal = sagBase ? sagBase + sagAgent + sagHR : null;
-
-      let sagHTML = '';
-      if (sagBase) {
-        sagHTML += rateLine('Session + Use Fee', fmt(sagBase));
-        if (sagNote) sagHTML += `<div class="rate-line"><span class="rate-label" style="font-size:0.8rem;">${sagNote}</span><span class="rate-value" style="color:#555;font-size:0.8rem;">SAG 2025</span></div>`;
-        sagHTML += sagSpotNote;
-        sagHTML += rateLine('Agent Fee (10%)', fmt(sagAgent));
-        sagHTML += rateLine('H&R Contribution (23.5%)', fmt(sagHR));
-        sagHTML += `<div class="rate-total"><div class="rate-line rate-total">
-          <span class="rate-label">Total Talent Cost</span>
-          <span class="rate-value accent">${fmt(sagTotal)}</span>
-        </div></div>`;
-      } else {
-        sagHTML = '<p class="no-rate">Rate not available for this combination. Contact us for a custom quote.</p>';
+        // SAG — session + use
+        const sagSession = SAG_TV_SESSION;
+        const sagUse = SAG_TV_USE[market]?.[run] || null;
+        if (sagUse != null) {
+          const sagBase = sagSession + sagUse;
+          const sagAgent = sagBase * AGENT_UNION;
+          const sagHR = sagBase * HR_RATE;
+          const sagTotal = sagBase + sagAgent + sagHR;
+          sagHTML = rl('Session Fee', fmt(sagSession));
+          sagHTML += rl('Use Fee', fmt(sagUse));
+          sagHTML += rl('Agent Fee (10%)', fmt(sagAgent));
+          sagHTML += rl('H&R Contribution (23.5%)', fmt(sagHR));
+          sagHTML += totalBlock('Total Talent Cost', fmt(sagTotal), true);
+        } else {
+          sagHTML = '<p class="no-rate">Contact us for a custom quote.</p>';
+        }
+        noteHTML = '<strong>TV rates</strong> are for off-camera VO principals. SAG includes a session fee + use fee. GVAA rates are per spot. Rates vary by market size and usage duration.';
       }
 
-      // --- GVAA ---
-      let gvaaRange = null;
-      if (medium === 'national') {
-        gvaaRange = GVAA_RADIO['national'];
-      } else if (medium === 'digital') {
-        gvaaRange = GVAA_DIGITAL[market] || GVAA_DIGITAL['local'];
-      } else {
-        gvaaRange = GVAA_RADIO[market] || GVAA_RADIO['local'];
+      // ── DIGITAL / ONLINE ──────────────────────────────────────
+      else if (cat === 'digital') {
+        // GVAA
+        let gvaaBase = GVAA_DIGITAL[market]?.[run] || null;
+        if (gvaaBase && spot === '15') gvaaBase = Math.round(gvaaBase * 0.7);
+        if (gvaaBase) {
+          const gvaaAgent = Math.round(gvaaBase * AGENT_NONUNION);
+          const gvaaTotal = gvaaBase + gvaaAgent;
+          gvaaHTML = rl('Talent Rate (GVAA)', fmtInt(gvaaBase));
+          gvaaHTML += rl('Agent Fee (20%)', fmtInt(gvaaAgent));
+          gvaaHTML += rl('No H&R required', '✓ Non-union', false, true);
+          gvaaHTML += totalBlock('Total Talent Cost', fmtInt(gvaaTotal), false);
+        }
+
+        // SAG
+        const sagSession = SAG_DIGITAL_SESSION;
+        const sagUse = SAG_DIGITAL_USE[market]?.[run] || null;
+        if (sagUse != null) {
+          const sagBase = sagSession + sagUse;
+          const sagAgent = sagBase * AGENT_UNION;
+          const sagHR = sagBase * HR_RATE;
+          const sagTotal = sagBase + sagAgent + sagHR;
+          sagHTML = rl('Session Fee', fmt(sagSession));
+          sagHTML += rl('Digital Use Fee', fmt(sagUse));
+          sagHTML += rl('Agent Fee (10%)', fmt(sagAgent));
+          sagHTML += rl('H&R Contribution (23.5%)', fmt(sagHR));
+          sagHTML += totalBlock('Total Talent Cost', fmt(sagTotal), true);
+        } else {
+          sagHTML = '<p class="no-rate">Contact us for a custom quote.</p>';
+        }
+        noteHTML = '<strong>Digital rates</strong> cover online spots with paid placement: YouTube, Hulu, social media, streaming pre-rolls, OTT. SAG uses the TV Commercials contract for digital placements.';
       }
 
-      // Always use high end only
-      let gvaaRate = gvaaRange.high;
-
-      // Spot length: :15 typically lower
-      if (spot === '15') {
-        gvaaRate = Math.round(gvaaRate * 0.7);
+      // ── TAGLINE ───────────────────────────────────────────────
+      else if (cat === 'tagline') {
+        const gvaaBase = GVAA_TAGLINE_TV[market]?.[run] || null;
+        if (gvaaBase) {
+          const gvaaAgent = Math.round(gvaaBase * AGENT_NONUNION);
+          const gvaaTotal = gvaaBase + gvaaAgent;
+          gvaaHTML = rl('Tagline Rate (GVAA)', fmtInt(gvaaBase));
+          gvaaHTML += rl('Agent Fee (20%)', fmtInt(gvaaAgent));
+          gvaaHTML += rl('No H&R required', '✓ Non-union', false, true);
+          gvaaHTML += totalBlock('Total Talent Cost', fmtInt(gvaaTotal), false);
+        }
+        sagHTML = `<p class="no-rate">SAG tagline rates vary — typically billed as a pickup/tag session ($115.50/tag or bundle pricing). Contact us for exact SAG tag rates.</p>`;
+        noteHTML = '<strong>Taglines</strong> are short voiced tags added to the end of a spot (phone number, location, slogan). Rates are per tagline. For multiple tags, bundle pricing may apply.';
       }
 
-      // Run length: longer runs scale up
-      if (run === '26wk' || run === '52wk') {
-        gvaaRate = Math.round(gvaaRate * 1.5);
+      // ── INDUSTRIAL / CORPORATE ────────────────────────────────
+      else if (cat === 'industrial') {
+        const gvaaBase = GVAA_INDUSTRIAL[script] || 450;
+        const gvaaAgent = Math.round(gvaaBase * AGENT_NONUNION);
+        const gvaaTotal = gvaaBase + gvaaAgent;
+        gvaaHTML = rl('Talent Rate (GVAA)', fmtInt(gvaaBase));
+        gvaaHTML += rl('Agent Fee (20%)', fmtInt(gvaaAgent));
+        gvaaHTML += rl('Basis', 'Per finished script', false, true);
+        gvaaHTML += rl('No H&R required', '✓ Non-union', false, true);
+        gvaaHTML += totalBlock('Total Talent Cost', fmtInt(gvaaTotal), false);
+        sagHTML = `<p class="no-rate">Industrial/corporate narration is typically non-union (GVAA rates apply). SAG-AFTRA does have a Corporate/Educational contract — contact us if union talent is required for this project.</p>`;
+        noteHTML = '<strong>Industrial / Corporate Narration</strong> covers training videos, explainers, internal communications, and non-broadcast corporate content. These projects are typically non-union.';
       }
 
-      let gvaaAgent = Math.round(gvaaRate * 0.20);
-      let gvaaTotal = gvaaRate + gvaaAgent;
+      // ── E-LEARNING ────────────────────────────────────────────
+      else if (cat === 'elearning') {
+        const minutes = ELEARNING_LENGTHS[script] || 5;
+        const gvaaBase = Math.round(minutes * GVAA_ELEARNING_PFM);
+        const gvaaMin = 450;
+        const gvaaFinal = Math.max(gvaaBase, gvaaMin);
+        const gvaaAgent = Math.round(gvaaFinal * AGENT_NONUNION);
+        const gvaaTotal = gvaaFinal + gvaaAgent;
+        gvaaHTML = rl('Talent Rate (GVAA)', fmtInt(gvaaFinal));
+        gvaaHTML += rl('Rate basis', `$55/finished min — ${minutes} min`, false, true);
+        gvaaHTML += rl('Agent Fee (20%)', fmtInt(gvaaAgent));
+        gvaaHTML += rl('No H&R required', '✓ Non-union', false, true);
+        gvaaHTML += totalBlock('Total Talent Cost', fmtInt(gvaaTotal), false);
+        sagHTML = `<p class="no-rate">E-learning is typically non-union. SAG-AFTRA does not have a standard e-learning contract — most productions use GVAA rates or negotiate directly.</p>`;
+        noteHTML = '<strong>E-Learning rates</strong> are based on finished (edited) minutes at $55/min with a $450 minimum. Rates cover internal training, LMS content, and educational modules.';
+      }
 
-      let gvaaHTML = '';
-      gvaaHTML += rateLine('Talent Rate (GVAA)', '$' + gvaaRate.toLocaleString());
-      gvaaHTML += rateLine('Agent Fee (20%)', '$' + gvaaAgent.toLocaleString());
-      gvaaHTML += `<div class="rate-line"><span class="rate-label" style="font-size:0.8rem;">GVAA suggested rate · non-negotiable floor</span><span class="rate-value" style="color:#555;font-size:0.8rem;">GVAA Guide</span></div>`;
-      gvaaHTML += `<div class="rate-total"><div class="rate-line rate-total">
-        <span class="rate-label">Total Talent Cost</span>
-        <span class="rate-value">$${gvaaTotal.toLocaleString()}</span>
-      </div></div>`;
-      gvaaHTML += '<div class="rate-line"><span class="rate-label" style="font-size:0.8rem;">No H&R required</span><span class="rate-value" style="color:#5cff9c;font-size:0.8rem;">Non-union</span></div>';
-
-      document.getElementById('gvaa-lines').innerHTML = gvaaHTML;
-      document.getElementById('sag-lines').innerHTML = sagHTML;
+      document.getElementById('gvaa-lines').innerHTML = gvaaHTML || '<p class="no-rate">Rate not available for this combination.</p>';
+      document.getElementById('sag-lines').innerHTML = sagHTML || '<p class="no-rate">Rate not available. Contact us for a quote.</p>';
+      document.getElementById('calc-note').innerHTML = noteHTML + ' Rates shown are per talent (principal performer). Agent fees are shown separately. <strong>GVAA</strong> rates reflect the high end of the guide — the floor, not the ceiling. <strong>SAG-AFTRA</strong> rates are contractual minimums; H&R contribution (23.5%) is paid by the employer.';
 
       const el = document.getElementById('results');
       el.classList.add('visible');
       el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+
+    // Init
+    onCategoryChange();
   </script>
 </body>
 </html>
