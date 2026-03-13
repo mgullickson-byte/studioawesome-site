@@ -428,7 +428,6 @@
           </div>
         </div>
 
-        <div class="calc-note" id="calc-note"></div>
       </div>
 
       <!-- PROJECT TOTAL PANEL -->
@@ -456,6 +455,10 @@
             <div style="font-size:0.72rem;color:#444;margin-top:4px;">session + all usage + 10% agent + 23.5% H&R</div>
           </div>
         </div>
+      </div>
+
+      <div class="calc-results" id="results-disclaimer" style="display:none;">
+        <div class="calc-note" id="calc-note"></div>
       </div>
     </div>
   </main>
@@ -974,6 +977,7 @@
 
       document.getElementById('gvaa-lines').innerHTML = gvaaHTML || '<p class="no-rate">Rate not available for this combination.</p>';
       document.getElementById('sag-lines').innerHTML = sagHTML || '<p class="no-rate">Rate not available. Contact us for a quote.</p>';
+      document.getElementById('results-disclaimer').style.display = 'block';
       document.getElementById('calc-note').innerHTML = noteHTML + ' Rates shown are per talent (principal performer). <strong>Market Rate</strong> is based on the 75th percentile of real non-union productions posted on Select Casting — TV and Digital use Select Casting data (2024–2026); Radio uses GVAA rates by market tier (SC data cannot distinguish local vs. national); Industrial uses full SC dataset. Rates are derived from productions where talent budgets were explicitly documented; projects with undisclosed or negotiated-offline budgets are not included. Rates represent what well-compensated talent on professional productions actually earns, floored at industry guidelines where market data runs lower. <strong>SAG-AFTRA</strong> rates are contractual minimums (effective April 1, 2025–March 31, 2026); H&R contribution (23.5%) is paid by the employer on top of talent fees. Talent must be a SAG-AFTRA member; producer must be a SAG signatory.';
 
       // Update non-union card title based on data source
