@@ -493,14 +493,15 @@
 
     const SC_SESSION = 500; // Flat; covers 2-hr session + all reads
 
-    // Radio: flat usage per spot (run-length multiplier applied same as GVAA)
-    // local/twomajors: SC 75th wins | allthree/national: GVAA $2500 floors
+    // Radio: 75th percentile, LAST 2 YEARS data (2024–2026, n=207 non-union records)
+    // Radio rates have risen ~33% vs all-time — 2yr data is more accurate
+    // allthree/national: GVAA $2500 floors SC
     const SC_RADIO = {
-      local: 750, ny: 750, chila: 750, twomajors: 1000, allthree: 2500, national: 2500
+      local: 1000, ny: 1000, chila: 1000, twomajors: 1250, allthree: 2500, national: 2500
     };
 
-    // TV Broadcast: usage fee only (session $500 shown separately)
-    // 75th percentile, floored at GVAA where SC runs lower
+    // TV Broadcast: 75th percentile, LAST 2 YEARS data (2024–2026, n=173)
+    // TV rates stable over time — 2yr and all-time are identical
     const SC_TV = {
       local:        { '3mo': 1500, '6mo': 2000, '12mo': 2500  },
       regional:     { '3mo': 2000, '6mo': 2500, '12mo': 2800  },
@@ -781,7 +782,7 @@
 
       document.getElementById('gvaa-lines').innerHTML = gvaaHTML || '<p class="no-rate">Rate not available for this combination.</p>';
       document.getElementById('sag-lines').innerHTML = sagHTML || '<p class="no-rate">Rate not available. Contact us for a quote.</p>';
-      document.getElementById('calc-note').innerHTML = noteHTML + ' Rates shown are per talent (principal performer). <strong>Market Rate</strong> is based on the 75th percentile of 2,468 real non-union productions posted on Select Casting (Late 2025–Q1 2026) — what well-compensated talent on professional productions actually earns. Floored at industry guidelines where market data runs lower. <strong>SAG-AFTRA</strong> rates are contractual minimums (effective April 1, 2025–March 31, 2026); H&R contribution (23.5%) is paid by the employer on top of talent fees. Talent must be a SAG-AFTRA member; producer must be a SAG signatory.';
+      document.getElementById('calc-note').innerHTML = noteHTML + ' Rates shown are per talent (principal performer). <strong>Market Rate</strong> is based on the 75th percentile of real non-union productions posted on Select Casting — TV and Radio use the last 2 years of data (2024–2026); Digital and Industrial use all available data for larger sample accuracy. Rates represent what well-compensated talent on professional productions actually earns, floored at industry guidelines where market data runs lower. <strong>SAG-AFTRA</strong> rates are contractual minimums (effective April 1, 2025–March 31, 2026); H&R contribution (23.5%) is paid by the employer on top of talent fees. Talent must be a SAG-AFTRA member; producer must be a SAG signatory.';
 
       const el = document.getElementById('results');
       el.classList.add('visible');
