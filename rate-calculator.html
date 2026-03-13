@@ -317,14 +317,6 @@
           </div>
         </div>
 
-        <!-- "Is this a lift?" — shown only when project already has spots -->
-        <div id="lift-toggle-row" style="display:none;margin-top:12px;">
-          <label style="display:flex;align-items:center;gap:8px;font-size:0.85rem;color:#888;cursor:pointer;">
-            <input type="checkbox" id="is-lift" style="accent-color:#5cff9c;">
-            This spot is a lift / cut-down of a previous spot (50% usage fee)
-          </label>
-        </div>
-
         <button class="calc-btn" onclick="calculate()">Calculate Rates</button>
       </div>
 
@@ -344,42 +336,38 @@
           </div>
         </div>
 
-        <!-- Add to Project row — right under results, before disclaimer -->
-        <div class="add-spot-row" id="add-spot-row" style="display:none;">
-          <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap;flex:1;">
-            <label style="font-size:0.82rem;color:#666;display:flex;align-items:center;gap:8px;">
-              Cut-downs from this spot:
-              <input type="number" id="num-cutdowns" min="0" max="10" value="0"
-                style="width:52px;background:#111;border:1px solid #2a2a2a;color:#f5f5f5;border-radius:6px;padding:5px 8px;font-size:0.85rem;">
-            </label>
-            <label style="font-size:0.82rem;color:#666;display:flex;align-items:center;gap:8px;">
-              Tags:
-              <input type="number" id="num-tags" min="0" max="20" value="0"
-                style="width:52px;background:#111;border:1px solid #2a2a2a;color:#f5f5f5;border-radius:6px;padding:5px 8px;font-size:0.85rem;">
-            </label>
-          </div>
-          <button class="calc-btn" style="margin-top:0;padding:10px 22px;font-size:0.88rem;white-space:nowrap;" onclick="addToProject()">+ Add to Project</button>
-        </div>
-
         <div class="calc-note" id="calc-note"></div>
       </div>
 
       <!-- PROJECT TOTAL PANEL -->
       <div class="calc-wrap" id="project-panel" style="display:none;padding-top:0;">
-        <hr style="border:none;border-top:1px solid #1a1a1a;margin-bottom:32px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-          <h3 style="font-size:1.1rem;font-weight:700;color:#f5f5f5;margin:0;">Project Total</h3>
-          <button onclick="clearProject()" style="background:none;border:1px solid #333;color:#555;font-size:0.75rem;padding:5px 12px;border-radius:6px;cursor:pointer;">Clear All</button>
+        <hr style="border:none;border-top:1px solid #1a1a1a;margin-bottom:28px;">
+        <h3 style="font-size:1.1rem;font-weight:700;color:#f5f5f5;margin:0 0 20px;">Project Total</h3>
+
+        <!-- Variation fields -->
+        <div style="display:flex;gap:24px;flex-wrap:wrap;margin-bottom:24px;padding:18px 20px;background:#050505;border:1px solid #1a1a1a;border-radius:10px;">
+          <label style="font-size:0.85rem;color:#666;display:flex;align-items:center;gap:10px;">
+            Cut-downs / Lifts
+            <input type="number" id="num-cutdowns" min="0" max="20" value="0" oninput="renderProjectPanel()"
+              style="width:56px;background:#111;border:1px solid #2a2a2a;color:#f5f5f5;border-radius:6px;padding:6px 10px;font-size:0.9rem;">
+          </label>
+          <label style="font-size:0.85rem;color:#666;display:flex;align-items:center;gap:10px;">
+            Tags
+            <input type="number" id="num-tags" min="0" max="20" value="0" oninput="renderProjectPanel()"
+              style="width:56px;background:#111;border:1px solid #2a2a2a;color:#f5f5f5;border-radius:6px;padding:6px 10px;font-size:0.9rem;">
+          </label>
         </div>
+
         <div id="project-lines" style="margin-bottom:24px;"></div>
+
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
           <div class="rate-total-block non-union" style="margin:0;">
             <div class="rate-line"><span class="rate-label">Non-Union Total</span><span class="rate-value" id="proj-nu-total">—</span></div>
-            <div style="font-size:0.72rem;color:#444;margin-top:4px;">session (once) + all usage fees + 20% agent</div>
+            <div style="font-size:0.72rem;color:#444;margin-top:4px;">session + all usage + 20% agent</div>
           </div>
           <div class="rate-total-block" style="margin:0;">
             <div class="rate-line"><span class="rate-label">SAG-AFTRA Total</span><span class="rate-value accent" id="proj-sag-total">—</span></div>
-            <div style="font-size:0.72rem;color:#444;margin-top:4px;">session (once) + all usage fees + 10% agent + 23.5% H&R</div>
+            <div style="font-size:0.72rem;color:#444;margin-top:4px;">session + all usage + 10% agent + 23.5% H&R</div>
           </div>
         </div>
       </div>
@@ -865,7 +853,6 @@
       document.getElementById('sag-lines').innerHTML = sagHTML || '<p class="no-rate">Rate not available. Contact us for a quote.</p>';
       document.getElementById('calc-note').innerHTML = noteHTML + ' Rates shown are per talent (principal performer). <strong>Market Rate</strong> is based on the 75th percentile of real non-union productions posted on Select Casting — TV and Radio use the last 2 years of data (2024–2026); Digital and Industrial use all available data for larger sample accuracy. Rates are derived from productions where talent budgets were explicitly documented; projects with undisclosed or negotiated-offline budgets are not included. Rates represent what well-compensated talent on professional productions actually earns, floored at industry guidelines where market data runs lower. <strong>SAG-AFTRA</strong> rates are contractual minimums (effective April 1, 2025–March 31, 2026); H&R contribution (23.5%) is paid by the employer on top of talent fees. Talent must be a SAG-AFTRA member; producer must be a SAG signatory.';
 
-      document.getElementById('add-spot-row').style.display = 'flex';
       document.getElementById('num-cutdowns').value = 0;
       document.getElementById('num-tags').value = 0;
 
@@ -873,136 +860,87 @@
       el.classList.add('visible');
       el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-      // Store for project total
+      // Store and render project total automatically
       window._lastSpotData = { label: heading, nuUsage: window._nuUsage || 0, nuSession: SC_SESSION, sagBaseTotal: window._sagBaseTotal || 0 };
+      renderProjectPanel();
     }
 
     // ─── PROJECT TOTAL ────────────────────────────────────────────
 
-    let projectSpots = [];
-
-    function addToProject() {
-      const d = window._lastSpotData;
-      if (!d) return;
-      const isLift = document.getElementById('is-lift')?.checked || false;
-      const numCutdowns = parseInt(document.getElementById('num-cutdowns')?.value || 0);
-      const numTags = parseInt(document.getElementById('num-tags')?.value || 0);
-
-      projectSpots.push({
-        label: d.label,
-        nuUsage: d.nuUsage,
-        sagBaseTotal: d.sagBaseTotal,
-        isLift,
-        numCutdowns,
-        numTags,
-        tagNuRate: Math.round(d.nuUsage * 0.15),  // tags ~15% of spot usage, min $100
-        tagSagRate: 115
-      });
-
-      // Reset fields
-      if (document.getElementById('is-lift')) document.getElementById('is-lift').checked = false;
-      document.getElementById('num-cutdowns').value = 0;
-      document.getElementById('num-tags').value = 0;
-
-      // Show lift toggle for next spot
-      document.getElementById('lift-toggle-row').style.display = 'block';
-
-      renderProjectPanel();
-    }
-
-    function removeSpot(i) {
-      projectSpots.splice(i, 1);
-      if (projectSpots.length === 0) document.getElementById('lift-toggle-row').style.display = 'none';
-      renderProjectPanel();
-    }
-
-    function clearProject() {
-      projectSpots = [];
-      document.getElementById('lift-toggle-row').style.display = 'none';
-      if (document.getElementById('is-lift')) document.getElementById('is-lift').checked = false;
-      renderProjectPanel();
-    }
-
     function renderProjectPanel() {
+      const d = window._lastSpotData;
       const panel = document.getElementById('project-panel');
-      if (projectSpots.length === 0) { panel.style.display = 'none'; return; }
+      if (!d) { panel.style.display = 'none'; return; }
       panel.style.display = 'block';
 
-      let nuUsageTotal = 0, sagUsageTotal = 0;
+      const numCutdowns = Math.max(0, parseInt(document.getElementById('num-cutdowns')?.value) || 0);
+      const numTags     = Math.max(0, parseInt(document.getElementById('num-tags')?.value) || 0);
+
+      const nuUsage  = d.nuUsage;
+      const sagUsage = d.sagBaseTotal;
+      const tagNuRate  = Math.max(Math.round(nuUsage * 0.15), 100);
+      const tagSagRate = 115; // SAG tag session rate
+
+      let nuUsageTotal  = nuUsage;
+      let sagUsageTotal = sagUsage;
+
       let rows = `<div class="project-header-row">
-        <span style="flex:1;">Spot / Line Item</span>
+        <span style="flex:1;">Line Item</span>
         <span style="min-width:90px;text-align:right;">Non-Union</span>
         <span style="min-width:90px;text-align:right;">SAG-AFTRA</span>
-        <span style="width:36px;"></span>
       </div>`;
 
-      projectSpots.forEach((s, i) => {
-        // Main spot
-        const nuU = s.isLift ? Math.round(s.nuUsage * 0.5) : s.nuUsage;
-        const sagU = s.isLift ? Math.round(s.sagBaseTotal * 0.5) : s.sagBaseTotal;
-        nuUsageTotal += nuU;
-        sagUsageTotal += sagU;
-        const liftTag = s.isLift ? ' <span class="project-spot-lift">lift</span>' : '';
-        rows += `<div class="project-spot-row">
-          <span class="project-spot-label">${s.label}${liftTag}</span>
-          <span class="project-spot-nu">${fmtInt(nuU)}</span>
-          <span class="project-spot-sag">${fmtInt(sagU)}</span>
-          <button class="project-spot-remove" onclick="removeSpot(${i})">✕</button>
+      // Main spot
+      rows += `<div class="project-spot-row">
+        <span class="project-spot-label">${d.label}</span>
+        <span class="project-spot-nu">${fmtInt(nuUsage)}</span>
+        <span class="project-spot-sag">${fmtInt(sagUsage)}</span>
+      </div>`;
+
+      // Cut-downs / Lifts (50% of spot usage each)
+      if (numCutdowns > 0) {
+        const cdNu  = Math.round(nuUsage  * 0.5) * numCutdowns;
+        const cdSag = Math.round(sagUsage * 0.5) * numCutdowns;
+        nuUsageTotal  += cdNu;
+        sagUsageTotal += cdSag;
+        rows += `<div class="project-spot-row" style="padding-left:16px;opacity:0.8;">
+          <span class="project-spot-label" style="color:#666;">Cut-downs / Lifts × ${numCutdowns} <span style="font-size:0.72rem;">(50% each)</span></span>
+          <span class="project-spot-nu">${fmtInt(cdNu)}</span>
+          <span class="project-spot-sag">${fmtInt(cdSag)}</span>
         </div>`;
+      }
 
-        // Cut-downs (50% of spot usage)
-        if (s.numCutdowns > 0) {
-          const cdNu = Math.round(nuU * 0.5) * s.numCutdowns;
-          const cdSag = Math.round(sagU * 0.5) * s.numCutdowns;
-          nuUsageTotal += cdNu;
-          sagUsageTotal += cdSag;
-          rows += `<div class="project-spot-row" style="padding-left:16px;opacity:0.8;">
-            <span class="project-spot-label" style="color:#666;">↳ Cut-downs × ${s.numCutdowns} <span style="font-size:0.72rem;">(50% each)</span></span>
-            <span class="project-spot-nu">${fmtInt(cdNu)}</span>
-            <span class="project-spot-sag">${fmtInt(cdSag)}</span>
-            <span style="width:36px;"></span>
-          </div>`;
-        }
+      // Tags
+      if (numTags > 0) {
+        const tNu  = tagNuRate  * numTags;
+        const tSag = tagSagRate * numTags;
+        nuUsageTotal  += tNu;
+        sagUsageTotal += tSag;
+        rows += `<div class="project-spot-row" style="padding-left:16px;opacity:0.8;">
+          <span class="project-spot-label" style="color:#666;">Tags × ${numTags}</span>
+          <span class="project-spot-nu">${fmtInt(tNu)}</span>
+          <span class="project-spot-sag">${fmtInt(tSag)}</span>
+        </div>`;
+      }
 
-        // Tags
-        if (s.numTags > 0) {
-          const tagNu = Math.max(s.tagNuRate, 100) * s.numTags;
-          const tagSag = s.tagSagRate * s.numTags;
-          nuUsageTotal += tagNu;
-          sagUsageTotal += tagSag;
-          rows += `<div class="project-spot-row" style="padding-left:16px;opacity:0.8;">
-            <span class="project-spot-label" style="color:#666;">↳ Tags × ${s.numTags}</span>
-            <span class="project-spot-nu">${fmtInt(tagNu)}</span>
-            <span class="project-spot-sag">${fmtInt(tagSag)}</span>
-            <span style="width:36px;"></span>
-          </div>`;
-        }
-      });
-
-      // Session fee — paid once for the whole project
-      rows += `<div class="project-spot-row" style="opacity:0.5;margin-top:8px;">
-        <span class="project-spot-label">Session fee <span style="font-size:0.72rem;">(one session covers all spots)</span></span>
+      // Session fee — paid once
+      rows += `<div class="project-spot-row" style="opacity:0.45;margin-top:6px;">
+        <span class="project-spot-label">Session fee <span style="font-size:0.72rem;">(covers entire session)</span></span>
         <span class="project-spot-nu">${fmtInt(SC_SESSION)}</span>
         <span class="project-spot-sag">${fmtInt(SAG_TV_SESSION)}</span>
-        <span style="width:36px;"></span>
       </div>`;
 
       document.getElementById('project-lines').innerHTML = rows;
 
-      // Grand totals
-      const nuGrand = SC_SESSION + nuUsageTotal;
-      const nuAgent = Math.round(nuGrand * AGENT_NONUNION);
-      const nuFinal = nuGrand + nuAgent;
+      // Totals
+      const nuGrand  = SC_SESSION + nuUsageTotal;
+      const nuFinal  = nuGrand + Math.round(nuGrand * AGENT_NONUNION);
 
       const sagGrand = SAG_TV_SESSION + sagUsageTotal;
-      const sagAgent = sagGrand * AGENT_UNION;
-      const sagHR = sagGrand * HR_RATE;
-      const sagFinal = sagGrand + sagAgent + sagHR;
+      const sagFinal = sagGrand * (1 + AGENT_UNION + HR_RATE);
 
-      document.getElementById('proj-nu-total').textContent = fmtInt(nuFinal);
+      document.getElementById('proj-nu-total').textContent  = fmtInt(nuFinal);
       document.getElementById('proj-sag-total').textContent = fmt(sagFinal);
-
-      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
     // Patch calculate() to capture last spot values
