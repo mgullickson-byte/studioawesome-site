@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Casting Sheet — Select Casting</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* ── Layout ───────────────────────────────────────────────── */
+    .sheet-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 60px 24px 100px;
+    }
+
+    /* ── Header ───────────────────────────────────────────────── */
+    .sheet-header {
+      margin-bottom: 48px;
+    }
+    .sheet-header h1 {
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      font-weight: 700;
+      color: #f5f5f5;
+      margin: 0 0 6px;
+      letter-spacing: -0.02em;
+    }
+    .sheet-header p {
+      color: #8c8c8c;
+      font-size: 0.95rem;
+      margin: 0;
+    }
+
+    /* ── Type toggle ─────────────────────────────────────────── */
+    .type-toggle {
+      display: inline-flex;
+      background: #111;
+      border: 1px solid #2a2a2a;
+      border-radius: 10px;
+      padding: 4px;
+      gap: 4px;
+      margin-bottom: 40px;
+    }
+    .type-toggle button {
+      background: none;
+      border: none;
+      color: #666;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 8px 20px;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: all 0.15s;
+      letter-spacing: 0.01em;
+    }
+    .type-toggle button.active {
+      background: #f97316;
+      color: #fff;
+    }
+    .type-toggle button:hover:not(.active) {
+      color: #ccc;
+    }
+
+    /* ── Section ─────────────────────────────────────────────── */
+    .section {
+      background: #050505;
+      border: 1px solid #1e1e1e;
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 24px;
+      border-bottom: 1px solid #1a1a1a;
+      background: #080808;
+    }
+    .section-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: #f97316;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      letter-spacing: 0.02em;
+    }
+    .section-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #f5f5f5;
+    }
+    .section-subtitle {
+      font-size: 0.75rem;
+      color: #555;
+      margin-left: auto;
+    }
+
+    .section-body {
+      padding: 24px;
+    }
+
+    /* ── Grid rows ───────────────────────────────────────────── */
+    .field-row {
+      display: grid;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .field-row.cols-1 { grid-template-columns: 1fr; }
+    .field-row.cols-2 { grid-template-columns: 1fr 1fr; }
+    .field-row.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .field-row.cols-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+    .field-row.cols-2-1 { grid-template-columns: 2fr 1fr; }
+    .field-row.cols-1-2 { grid-template-columns: 1fr 2fr; }
+    .field-row:last-child { margin-bottom: 0; }
+
+    @media (max-width: 640px) {
+      .field-row.cols-2,
+      .field-row.cols-3,
+      .field-row.cols-4,
+      .field-row.cols-2-1,
+      .field-row.cols-1-2 { grid-template-columns: 1fr; }
+    }
+
+    /* ── Field ───────────────────────────────────────────────── */
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .field label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #666;
+    }
+    .field label .req {
+      color: #f97316;
+      margin-left: 2px;
+    }
+    .field input,
+    .field select,
+    .field textarea {
+      background: #0d0d0d;
+      border: 1px solid #222;
+      border-radius: 8px;
+      color: #f5f5f5;
+      font-size: 0.88rem;
+      font-family: inherit;
+      padding: 10px 12px;
+      transition: border-color 0.15s;
+      outline: none;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: #f97316;
+    }
+    .field textarea {
+      resize: vertical;
+      min-height: 90px;
+      line-height: 1.5;
+    }
+    .field select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 32px;
+      cursor: pointer;
+    }
+    .field input::placeholder,
+    .field textarea::placeholder { color: #333; }
+
+    /* ── Pill toggle (Union/Non-Union) ───────────────────────── */
+    .pill-toggle {
+      display: inline-flex;
+      background: #0d0d0d;
+      border: 1px solid #222;
+      border-radius: 8px;
+      padding: 3px;
+      gap: 3px;
+    }
+    .pill-toggle button {
+      background: none;
+      border: none;
+      color: #555;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 7px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: inherit;
+      letter-spacing: 0.01em;
+    }
+    .pill-toggle button.active {
+      background: #f97316;
+      color: #fff;
+    }
+    .pill-toggle button:hover:not(.active) { color: #aaa; }
+
+    /* ── Date/time row ───────────────────────────────────────── */
+    .datetime-group {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1.2fr;
+      gap: 10px;
+    }
+    @media (max-width: 640px) {
+      .datetime-group { grid-template-columns: 1fr; }
+    }
+
+    /* ── Urgency badge row ───────────────────────────────────── */
+    .urgency-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .urgency-row label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #666;
+      white-space: nowrap;
+    }
+    .urgency-opts {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .urgency-opts button {
+      background: #0d0d0d;
+      border: 1px solid #222;
+      border-radius: 6px;
+      color: #555;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 5px 12px;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+    .urgency-opts button.urgent {
+      border-color: #ef4444;
+      color: #ef4444;
+    }
+    .urgency-opts button.active {
+      background: #f97316;
+      border-color: #f97316;
+      color: #fff;
+    }
+
+    /* ── Checkbox row ────────────────────────────────────────── */
+    .check-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .check-pill {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: #0d0d0d;
+      border: 1px solid #222;
+      border-radius: 7px;
+      padding: 7px 12px;
+      cursor: pointer;
+      transition: border-color 0.15s;
+      user-select: none;
+    }
+    .check-pill:hover { border-color: #444; }
+    .check-pill input { accent-color: #f97316; width: 14px; height: 14px; cursor: pointer; }
+    .check-pill span { font-size: 0.8rem; color: #aaa; }
+
+    /* ── Section divider ─────────────────────────────────────── */
+    .field-divider {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      margin: 20px 0;
+    }
+
+    /* ── Submit ──────────────────────────────────────────────── */
+    .submit-row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 32px;
+    }
+    .btn-secondary {
+      background: none;
+      border: 1px solid #2a2a2a;
+      border-radius: 10px;
+      color: #888;
+      font-size: 0.88rem;
+      font-weight: 600;
+      padding: 12px 24px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+    .btn-secondary:hover { border-color: #444; color: #ccc; }
+    .btn-primary {
+      background: #f97316;
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 700;
+      padding: 13px 32px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.15s;
+      letter-spacing: 0.01em;
+    }
+    .btn-primary:hover { background: #ea6c0a; }
+
+    /* ── Helper text ─────────────────────────────────────────── */
+    .field-hint {
+      font-size: 0.7rem;
+      color: #444;
+      margin-top: 2px;
+    }
+
+    /* ── Budget inline ───────────────────────────────────────── */
+    .budget-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+    @media (max-width: 640px) { .budget-row { grid-template-columns: 1fr; } }
+
+  </style>
+</head>
+<body>
+
+<header class="sa-header">
+  <div class="sa-header-inner">
+    <a class="sa-logo" href="/">
+      <img src="assets/sa-logo.svg" alt="Studio Awesome" onerror="this.style.display='none'"/>
+    </a>
+  </div>
+</header>
+
+<div class="sheet-wrap">
+
+  <!-- Header -->
+  <div class="sheet-header">
+    <h1>New Casting Project</h1>
+    <p>Submit a voiceover casting request to Select Casting. All fields marked <span style="color:#f97316">*</span> are required.</p>
+  </div>
+
+  <!-- Type toggle -->
+  <div class="type-toggle">
+    <button class="active" onclick="setType(this,'vo')">Voice Over</button>
+    <button onclick="setType(this,'oncamera')">On-Camera</button>
+    <button onclick="setType(this,'both')">Both</button>
+  </div>
+
+  <!-- ① Project Info -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div class="section-title">Project Info</div>
+      <div class="section-subtitle">What is this project?</div>
+    </div>
+    <div class="section-body">
+      <div class="field-row cols-2-1">
+        <div class="field">
+          <label>Casting Sheet Name <span class="req">*</span></label>
+          <input type="text" placeholder="e.g. Allstate Q3 Radio :30" />
+        </div>
+        <div class="field">
+          <label>Job / PO Number</label>
+          <input type="text" placeholder="Optional" />
+        </div>
+      </div>
+      <div class="field-row cols-3">
+        <div class="field">
+          <label>Client / Brand <span class="req">*</span></label>
+          <input type="text" placeholder="e.g. Allstate" />
+        </div>
+        <div class="field">
+          <label>Project Name</label>
+          <input type="text" placeholder="e.g. Mayhem Campaign" />
+        </div>
+        <div class="field">
+          <label>Product Type</label>
+          <select>
+            <option value="">Select…</option>
+            <option>Commercial</option>
+            <option>Radio</option>
+            <option>Pharma</option>
+            <option>Automotive</option>
+            <option>QSR / Food</option>
+            <option>Insurance</option>
+            <option>Beverage</option>
+            <option>Retail</option>
+            <option>Tech</option>
+            <option>Industrial / Corporate</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-row cols-2">
+        <div class="field">
+          <label>PO Contact Name</label>
+          <input type="text" placeholder="Name of person approving PO" />
+        </div>
+        <div class="field">
+          <label>PO Contact Email</label>
+          <input type="email" placeholder="email@agency.com" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ② Scheduling -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div class="section-title">Scheduling</div>
+      <div class="section-subtitle">Deadlines &amp; availability</div>
+    </div>
+    <div class="section-body">
+
+      <div class="field-row cols-1">
+        <div class="field">
+          <label>Urgency</label>
+          <div class="urgency-opts">
+            <button onclick="toggleUrgency(this)">Standard</button>
+            <button onclick="toggleUrgency(this)">Rush (24–48 hrs)</button>
+            <button class="urgent" onclick="toggleUrgency(this)">ASAP / Emergency</button>
+          </div>
+        </div>
+      </div>
+
+      <hr class="field-divider" />
+
+      <div class="field-row cols-1">
+        <div class="field">
+          <label>Auditions Due <span class="req">*</span></label>
+        </div>
+      </div>
+      <div class="datetime-group" style="margin-bottom:16px">
+        <input type="date" style="background:#0d0d0d;border:1px solid #222;border-radius:8px;color:#f5f5f5;font-size:0.88rem;padding:10px 12px;outline:none;font-family:inherit;" />
+        <input type="time" style="background:#0d0d0d;border:1px solid #222;border-radius:8px;color:#f5f5f5;font-size:0.88rem;padding:10px 12px;outline:none;font-family:inherit;" placeholder="Time" />
+        <select style="background:#0d0d0d;border:1px solid #222;border-radius:8px;color:#f5f5f5;font-size:0.88rem;padding:10px 12px;outline:none;font-family:inherit;appearance:none;">
+          <option>ET</option><option>CT</option><option selected>PT</option><option>MT</option>
+        </select>
+      </div>
+
+      <div class="field-row cols-1">
+        <div class="field">
+          <label>Talent Availability / Record Date</label>
+        </div>
+      </div>
+      <div class="datetime-group">
+        <input type="date" style="background:#0d0d0d;border:1px solid #222;border-radius:8px;color:#f5f5f5;font-size:0.88rem;padding:10px 12px;outline:none;font-family:inherit;" />
+        <input type="time" style="background:#0d0d0d;border:1px solid #222;border-radius:8px;color:#f5f5f5;font-size:0.88rem;padding:10px 12px;outline:none;font-family:inherit;" />
+        <select style="background:#0d0d0d;border:1px solid #222;border-radius:8px;color:#f5f5f5;font-size:0.88rem;padding:10px 12px;outline:none;font-family:inherit;appearance:none;">
+          <option>ET</option><option>CT</option><option selected>PT</option><option>MT</option>
+        </select>
+      </div>
+
+      <hr class="field-divider" />
+
+      <div class="field-row cols-3">
+        <div class="field">
+          <label>Shoot / Record Location</label>
+          <input type="text" placeholder="City, State or Remote" />
+        </div>
+        <div class="field">
+          <label>Language</label>
+          <select>
+            <option selected>English</option>
+            <option>Spanish</option>
+            <option>Bilingual (EN/ES)</option>
+            <option>French</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Local Hire Only?</label>
+          <div class="pill-toggle" style="margin-top:2px;">
+            <button onclick="togglePill(this)" style="padding:7px 14px;">No</button>
+            <button onclick="togglePill(this)" style="padding:7px 14px;">Yes</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-row cols-1">
+        <div class="field">
+          <label>Home Studio Requirements</label>
+          <div class="check-group">
+            <label class="check-pill"><input type="checkbox" /><span>Home studio required</span></label>
+            <label class="check-pill"><input type="checkbox" /><span>Source Connect required</span></label>
+            <label class="check-pill"><input type="checkbox" checked /><span>Home studio preferred</span></label>
+            <label class="check-pill"><input type="checkbox" /><span>No home studio (directed session only)</span></label>
+            <label class="check-pill"><input type="checkbox" /><span>ISDN</span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ③ Usage & Budget -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title">Usage &amp; Budget</div>
+      <div class="section-subtitle">The legal &amp; financial details</div>
+    </div>
+    <div class="section-body">
+
+      <div class="field-row cols-2">
+        <div class="field">
+          <label>Union Status <span class="req">*</span></label>
+          <div class="pill-toggle" style="margin-top:2px;">
+            <button class="active" onclick="togglePill(this)">Non-Union</button>
+            <button onclick="togglePill(this)">SAG-AFTRA</button>
+            <button onclick="togglePill(this)">Both</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>Exclusivity</label>
+          <div class="pill-toggle" style="margin-top:2px;">
+            <button class="active" onclick="togglePill(this)">None</button>
+            <button onclick="togglePill(this)">Category</button>
+            <button onclick="togglePill(this)">Full</button>
+          </div>
+        </div>
+      </div>
+
+      <hr class="field-divider" />
+
+      <div class="field-row cols-2">
+        <div class="field">
+          <label>Usage / Media <span class="req">*</span></label>
+          <input type="text" placeholder="e.g. Broadcast TV, OLV, Social, Radio" />
+          <div class="field-hint">Where will this content run?</div>
+        </div>
+        <div class="field">
+          <label>Territory</label>
+          <input type="text" placeholder="e.g. US National, Local (TX), Worldwide" />
+        </div>
+      </div>
+
+      <div class="field-row cols-2">
+        <div class="field">
+          <label>Term / Duration</label>
+          <input type="text" placeholder="e.g. 1 Year, 13 Weeks, Perpetuity" />
+        </div>
+        <div class="field">
+          <label>Exclusivity Detail</label>
+          <input type="text" placeholder="e.g. Automotive category, 6 months" />
+        </div>
+      </div>
+
+      <hr class="field-divider" />
+
+      <div class="field-row cols-1">
+        <div class="field">
+          <label>Talent Budget</label>
+          <p class="field-hint" style="margin:0 0 8px;">Break it out if you can — it helps agents submit the right talent.</p>
+        </div>
+      </div>
+      <div class="budget-row">
+        <div class="field">
+          <label>Session Fee</label>
+          <input type="text" placeholder="e.g. $500 + 20%" />
+        </div>
+        <div class="field">
+          <label>Usage / Buyout Fee</label>
+          <input type="text" placeholder="e.g. $1,500 + 20%" />
+        </div>
+        <div class="field">
+          <label>Or Total All-In</label>
+          <input type="text" placeholder="e.g. $2,000 all in + 20%" />
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ④ Talent Requirements -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div class="section-title">Talent Requirements</div>
+      <div class="section-subtitle">Specs, scripts &amp; attachments</div>
+    </div>
+    <div class="section-body">
+
+      <div class="field-row cols-2">
+        <div class="field">
+          <label>Auditions per Agent</label>
+          <input type="number" placeholder="e.g. 5" min="1" max="30" />
+        </div>
+        <div class="field">
+          <label>Callbacks</label>
+          <div class="pill-toggle" style="margin-top:2px;">
+            <button class="active" onclick="togglePill(this)">Possible</button>
+            <button onclick="togglePill(this)">Unlikely</button>
+            <button onclick="togglePill(this)">No</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-row cols-1">
+        <div class="field">
+          <label>Notes to Agents</label>
+          <textarea placeholder="Casting direction, character descriptions, pronunciation guides, accent requirements, age ranges, etc."></textarea>
+        </div>
+      </div>
+
+      <div class="field-row cols-1">
+        <div class="field">
+          <label>Notes to Talent</label>
+          <textarea rows="3" placeholder="Instructions for the audition read — direction, tone, technical notes, what NOT to do, etc."></textarea>
+        </div>
+      </div>
+
+      <hr class="field-divider" />
+
+      <div class="field-row cols-2">
+        <div class="field">
+          <label>Scripts</label>
+          <input type="file" accept=".pdf,.doc,.docx,.txt" style="background:#0d0d0d;border:1px solid #222;border-radius:8px;color:#888;font-size:0.82rem;padding:10px 12px;" />
+          <div class="field-hint">PDF, Word, or plain text</div>
+        </div>
+        <div class="field">
+          <label>Reference / Scratch Track</label>
+          <input type="file" accept=".mp3,.wav,.aiff,.m4a,.mp4,.mov" style="background:#0d0d0d;border:1px solid #222;border-radius:8px;color:#888;font-size:0.82rem;padding:10px 12px;" />
+          <div class="field-hint">Audio or video reference</div>
+        </div>
+      </div>
+
+      <div class="field-row cols-2">
+        <div class="field">
+          <label>NDA Required?</label>
+          <div class="pill-toggle" style="margin-top:2px;">
+            <button class="active" onclick="togglePill(this)">No</button>
+            <button onclick="togglePill(this)">Yes — attach below</button>
+          </div>
+        </div>
+        <div class="field" id="nda-upload" style="display:none;">
+          <label>NDA Document</label>
+          <input type="file" accept=".pdf,.doc,.docx" style="background:#0d0d0d;border:1px solid #222;border-radius:8px;color:#888;font-size:0.82rem;padding:10px 12px;" />
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ⑤ Distribution -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div class="section-title">Distribution</div>
+      <div class="section-subtitle">Who receives this casting?</div>
+    </div>
+    <div class="section-body">
+
+      <div class="field-row cols-3">
+        <div class="field">
+          <label>Your Name <span class="req">*</span></label>
+          <input type="text" placeholder="Your full name" />
+        </div>
+        <div class="field">
+          <label>Your Email <span class="req">*</span></label>
+          <input type="email" placeholder="you@agency.com" />
+        </div>
+        <div class="field">
+          <label>Phone</label>
+          <input type="tel" placeholder="Optional" />
+        </div>
+      </div>
+
+      <div class="field-row cols-1">
+        <div class="field">
+          <label>Talent Agencies to Notify</label>
+          <textarea rows="3" placeholder="List specific agencies, or leave blank to send to all Select Casting approved agents for this category."></textarea>
+          <div class="field-hint">Leave blank = all approved agencies for this project type receive it</div>
+        </div>
+      </div>
+
+      <div class="field-row cols-1">
+        <div class="field">
+          <label>Role Names</label>
+          <input type="text" placeholder="e.g. Announcer, Mom, Kid — comma separated" />
+          <div class="field-hint">Label each role so agents can submit per character</div>
+        </div>
+      </div>
+
+      <div class="field-row cols-1">
+        <div class="field">
+          <label>Password Protect This Casting? <span style="color:#555;font-weight:400;text-transform:none;font-size:0.7rem;">(optional)</span></label>
+          <input type="text" placeholder="Leave blank for no password" style="max-width:280px;" />
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Submit -->
+  <div class="submit-row">
+    <button class="btn-secondary">Save Draft</button>
+    <button class="btn-primary">Submit Casting →</button>
+  </div>
+
+</div>
+
+<script>
+  function setType(btn, type) {
+    btn.closest('.type-toggle').querySelectorAll('button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  function togglePill(btn) {
+    btn.closest('.pill-toggle').querySelectorAll('button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    // NDA toggle
+    if (btn.textContent.includes('Yes')) {
+      const nda = document.getElementById('nda-upload');
+      if (nda) nda.style.display = '';
+    } else {
+      const nda = document.getElementById('nda-upload');
+      if (nda) nda.style.display = 'none';
+    }
+  }
+  function toggleUrgency(btn) {
+    btn.closest('.urgency-opts').querySelectorAll('button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+</script>
+
+</body>
+</html>
