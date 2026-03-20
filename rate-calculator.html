@@ -470,7 +470,7 @@
     <h2 style="font-size:1.6rem;font-weight:700;color:#f5f5f5;margin-bottom:8px;">Market Rate Data — Select Casting</h2>
     <p style="color:#8c8c8c;font-size:0.9rem;margin-bottom:8px;">
       Based on <strong style="color:#f5f5f5;">1,000+ non-union productions</strong> posted on Select Casting over the last two years.
-      The calculator uses <strong style="color:#5cff9c;">median rates</strong> — what most Select Casting clients actually pay, based on 1,372 real productions (2024–2026).
+      The calculator uses <strong style="color:#5cff9c;">median rates</strong> — what most Select Casting clients actually pay, based on 1,307 real non-union productions (2022–2026).
     </p>
 
     <style>
@@ -552,7 +552,7 @@
     </table>
 
     <div class="sc-note-box" style="margin-top:32px;">
-      <strong>Source:</strong> Select Casting platform data (2024–March 2026). 1,372 non-union records analyzed. Rates reflect the <strong>median</strong> of actual productions — what most SC clients pay. TV: n=435, Digital: n=460, Radio: n=213, Industrial: n=110. Session and usage fees analyzed separately; records below $150 excluded. Radio rates updated March 2026 based on SC data.
+      <strong>Source:</strong> Select Casting platform data (2022–March 2026). 1,307 non-union records analyzed (union/SAG excluded). Session and usage fees parsed separately across all project fields. Rates reflect the <strong>median</strong> of actual productions. TV+Digital: n=380, Digital/OLV: n=666, Radio: n=311, Industrial: n=130. Records below $150 and above $15,000 flagged and excluded.
     </div>
   </div>
   </section>
@@ -638,42 +638,47 @@
     };
 
     // ─── SELECT CASTING MARKET RATES ─────────────────────────────
-    // Based on 2,468 non-union productions on Select Casting (Late 2025–Q1 2026).
+    // Based on 1,307 non-union productions on Select Casting (2022–Q1 2026).
+    // Session + usage parsed separately across all fields (budget, term, notes, usage).
     // Using MEDIAN — what most SC clients actually pay (updated March 2026).
-    // All values are max(SC_75th, GVAA) — GVAA acts as a floor where SC data runs lower.
+    // Source: SC Rate Source Data tab in Select Casting Google Sheet.
 
-    const SC_SESSION = 500; // Flat; covers 2-hr session + all reads
+    const SC_SESSION = 450; // Median session fee across all non-union SC productions
 
-    // Radio: SC data cannot distinguish market tiers — using GVAA as the accurate reference.
-    // SC data is blended across all tiers and overstates local rates.
-    // Radio: SC median by market tier (updated March 2026, n=213)
+    // Radio: Usage fee by market × term (n=311 total)
+    // Local median $1,275 · National median $1,750
     const SC_RADIO = {
-      local: 700, ny: 1000, chila: 1000, twomajors: 1000, allthree: 2000, national: 2000
+      local:       700,   // local single-market (conservative — many short-term spots)
+      ny:          1500,  // major market single
+      chila:       1500,
+      twomajors:   1750,
+      allthree:    2000,
+      national:    2000,
     };
 
-    // TV Broadcast: MEDIAN, SC data 2024–2026 (n=435)
-    // Switched from 75th percentile to median — reflects what most SC clients actually pay
+    // TV Broadcast + Digital (combined, n=380 TV+Digital, n=51 TV-only)
+    // Primary axis: term/duration (market breakdowns have thin samples)
     const SC_TV = {
-      local:        { '3mo': 800,  '6mo': 1200, '12mo': 1500  },
-      regional:     { '3mo': 1200, '6mo': 1500, '12mo': 2000  },
-      cablenational:{ '3mo': 1500, '6mo': 2000, '12mo': 2500  },
-      national:     { '3mo': 2000, '6mo': 2500, '12mo': 3200  },
+      local:        { '3mo': 1000, '6mo': 1500, '12mo': 1800 },
+      regional:     { '3mo': 1250, '6mo': 2000, '12mo': 2500 },
+      cablenational:{ '3mo': 1500, '6mo': 2500, '12mo': 3000 },
+      national:     { '3mo': 2000, '6mo': 3000, '12mo': 3500 },
     };
 
-    // Digital / OLV / Streaming: MEDIAN, SC data 2024–2026 (n=460)
-    // Switched from 75th percentile to median
+    // Digital / OLV / Streaming (n=666)
+    // 3mo median $1,500 · 6mo $1,700 · 12mo $2,000 · 2yr $2,000
     const SC_DIGITAL = {
-      local:        { '3mo': 750,  '6mo': 1000, '12mo': 1500  },
-      regional:     { '3mo': 1000, '6mo': 1250, '12mo': 1750  },
-      cablenational:{ '3mo': 1250, '6mo': 1500, '12mo': 2000  },
-      national:     { '3mo': 1500, '6mo': 2000, '12mo': 2500  },
+      local:        { '3mo': 1000, '6mo': 1500, '12mo': 1750 },
+      regional:     { '3mo': 1250, '6mo': 1700, '12mo': 2000 },
+      cablenational:{ '3mo': 1500, '6mo': 2000, '12mo': 2500 },
+      national:     { '3mo': 1750, '6mo': 2350, '12mo': 3000 },
     };
 
-    // Industrial: MEDIAN, SC data 2024–2026 (n=110)
-    // Switched from 75th percentile to median
+    // Industrial / Corporate (n=130)
+    // Median $500 flat; longer scripts scale modestly
     const SC_INDUSTRIAL = {
-      '1-2': 500, '3-5': 500, '5-10': 500,
-      '10-15': 600, '15-20': 750, '20-30': 900, '30-60': 1500
+      '1-2': 500, '3-5': 500, '5-10': 600,
+      '10-15': 650, '15-20': 700, '20-30': 850, '30-60': 1200
     };
 
     const HR_RATE = 0.235;
