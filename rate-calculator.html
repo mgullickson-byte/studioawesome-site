@@ -648,16 +648,15 @@
 
     const SC_SESSION = 450; // Median session fee across all non-union SC productions
 
-    // Radio: SC data (n=311 non-union radio productions, 2022–2026)
-    // Primary breakdown: market tier (territory). Session included in total per SC data pattern.
-    // Local/Regional median $1,275 · US National median $1,788 · Worldwide $1,800
+    // Radio: SC data — pure radio only (TV+Radio combos excluded), n=167
+    // Local/Regional median $1,200 · US National median $1,700
     const SC_RADIO = {
-      local:       1275,  // Local/Regional: n=74, median $1,275
-      ny:          1500,  // Major market single — interpolated between local/national
-      chila:       1500,
-      twomajors:   1750,
-      allthree:    1800,
-      national:    1800,  // US National + Worldwide: n=74, median $1,788
+      local:       1200,  // Local/Regional: n=40, median $1,200
+      ny:          1400,  // Major market single — interpolated
+      chila:       1400,
+      twomajors:   1600,
+      allthree:    1700,
+      national:    1700,  // US National: n=15, median $1,700
     };
 
     // TV Broadcast + Digital (combined, n=380 TV+Digital, n=51 TV-only)
@@ -892,7 +891,7 @@
           window._sagBaseTotal = 0;
           sagHTML = '<p class="no-rate">Rate not available. Contact us for a quote.</p>';
         }
-        noteHTML = '<strong>Radio (Non-Union):</strong> Displays the higher of Select Casting market data (311 real productions, 2022–2026) or GVAA guidelines — whichever is greater for this market/run combination. Local rates are typically higher in SC data; national rates are typically higher in GVAA. Rate source is labeled on the card. SAG-AFTRA rates effective April 1, 2025–March 31, 2026.';
+        noteHTML = '<strong>Radio (Non-Union):</strong> Displays the higher of Select Casting market data (167 pure radio productions, TV+Radio combos excluded, 2022–2026) or GVAA guidelines — whichever is greater for this market/run combination. Rate source is labeled on the card. SAG-AFTRA rates effective April 1, 2025–March 31, 2026.';
       }
 
       // ── TV BROADCAST ──────────────────────────────────────────
