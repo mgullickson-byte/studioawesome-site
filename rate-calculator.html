@@ -826,7 +826,6 @@
       // ── RADIO ─────────────────────────────────────────────────
       if (cat === 'radio') {
         // SC data — session + usage combined median by market tier
-        // Longer runs get a modest uplift (SC data shows ~50% more for 1yr vs short-term)
         let scUsage = SC_RADIO[radioMarket] || 1275;
         if (radioRun === '4wk' || radioRun === '8wk') scUsage = Math.round(scUsage * 0.75);
         else if (radioRun === '13wk') scUsage = Math.round(scUsage * 0.90);
@@ -834,16 +833,41 @@
         else if (radioRun === '52wk') scUsage = Math.round(scUsage * 1.3);
         else if (radioRun === '2yr') scUsage = Math.round(scUsage * 1.7);
         if (spot === '15') scUsage = Math.round(scUsage * 0.7);
+
+        // GVAA all-in rate for this market/run
+        let gvaaAllIn = GVAA_RADIO[radioMarket] || 350;
+        if (radioRun === '4wk') gvaaAllIn = Math.round(gvaaAllIn * 0.8);
+        else if (radioRun === '8wk') gvaaAllIn = Math.round(gvaaAllIn * 0.9);
+        else if (radioRun === '26wk') gvaaAllIn = Math.round(gvaaAllIn * 1.5);
+        else if (radioRun === '52wk') gvaaAllIn = Math.round(gvaaAllIn * 2.0);
+        else if (radioRun === '2yr') gvaaAllIn = Math.round(gvaaAllIn * 2.8);
+        if (spot === '15') gvaaAllIn = Math.round(gvaaAllIn * 0.7);
+
+        // SC total (session + usage)
         const scSession = SC_SESSION;
-        window._nuUsage = scUsage;
+        const scTotal = scSession + scUsage;
+
+        // Pick whichever is higher — label honestly
+        const useScData = scTotal >= gvaaAllIn;
+        const rateLabel = useScData ? 'Market Rate (SC Data)' : 'GVAA Guideline Rate';
+        const usageAmt  = useScData ? scUsage : (gvaaAllIn - scSession);
+        const finalTotal = useScData ? scTotal : gvaaAllIn;
+
+        window._nuUsage = usageAmt;
         window._nuSessionIncluded = false;
-        const scAgent = Math.round((scSession + scUsage) * AGENT_NONUNION);
-        const scTotal = scSession + scUsage + scAgent;
+        const agent = Math.round(finalTotal * AGENT_NONUNION);
+        const grandTotal = finalTotal + agent;
+
         gvaaHTML = rl('Session Fee', fmtInt(scSession));
-        gvaaHTML += rl('Usage / Buyout', fmtInt(scUsage));
-        gvaaHTML += rl('Agent Fee (20%)', fmtInt(scAgent));
+        gvaaHTML += rl('Usage / Buyout', fmtInt(usageAmt));
+        gvaaHTML += rl('Agent Fee (20%)', fmtInt(agent));
         gvaaHTML += rl('No H&R required', '✓ Non-union', false, true);
-        gvaaHTML += totalBlock('Total Talent Cost', fmtInt(scTotal), false);
+        gvaaHTML += rl('Rate source', rateLabel, false, true);
+        gvaaHTML += totalBlock('Total Talent Cost', fmtInt(grandTotal), false);
+
+        // Update card title dynamically
+        document.querySelector('#card-gvaa .card-title').textContent =
+          useScData ? 'Market Rate' : 'GVAA Guideline';
 
         // SAG
         let sagBase = null;
@@ -868,7 +892,7 @@
           window._sagBaseTotal = 0;
           sagHTML = '<p class="no-rate">Rate not available. Contact us for a quote.</p>';
         }
-        noteHTML = '<strong>Radio (Non-Union):</strong> Rates based on 311 real non-union radio productions on Select Casting (2022–2026). Median by market tier: Local/Regional $1,275 · National $1,788. SAG-AFTRA rates effective April 1, 2025–March 31, 2026.';
+        noteHTML = '<strong>Radio (Non-Union):</strong> Displays the higher of Select Casting market data (311 real productions, 2022–2026) or GVAA guidelines — whichever is greater for this market/run combination. Local rates are typically higher in SC data; national rates are typically higher in GVAA. Rate source is labeled on the card. SAG-AFTRA rates effective April 1, 2025–March 31, 2026.';
       }
 
       // ── TV BROADCAST ──────────────────────────────────────────
@@ -1003,7 +1027,8 @@
       document.getElementById('calc-note').innerHTML = noteHTML + ' Rates shown are per talent (principal performer). <strong>Market Rate</strong> is based on the 75th percentile of real non-union productions posted on Select Casting — TV and Digital use Select Casting data (2024–2026); Radio uses GVAA rates by market tier (SC data cannot distinguish local vs. national); Industrial uses full SC dataset. Rates are derived from productions where talent budgets were explicitly documented; projects with undisclosed or negotiated-offline budgets are not included. Rates represent what most clients pay on Select Casting productions (median), floored at industry guidelines where data runs lower. <strong>SAG-AFTRA</strong> rates are contractual minimums (effective April 1, 2025–March 31, 2026); H&R contribution (23.5%) is paid by the employer on top of talent fees. Talent must be a SAG-AFTRA member; producer must be a SAG signatory.';
 
       // Update non-union card title based on data source
-      document.querySelector('#card-gvaa .card-title').textContent = 'Market Rate';
+      // Card title for radio is set dynamically above; set Market Rate for all other cats
+      if (cat !== 'radio') document.querySelector('#card-gvaa .card-title').textContent = 'Market Rate';
 
       applyUnionMode();
 
