@@ -825,7 +825,7 @@
       // ── RADIO ─────────────────────────────────────────────────
       if (cat === 'radio') {
         // SC data — session + usage combined median by market tier
-        let scUsage = SC_RADIO[radioMarket] || 1275;
+        let scUsage = SC_RADIO[radioMarket] || SC_RADIO['local'];
         if (radioRun === '4wk' || radioRun === '8wk') scUsage = Math.round(scUsage * 0.75);
         else if (radioRun === '13wk') scUsage = Math.round(scUsage * 0.90);
         else if (radioRun === '26wk') scUsage = Math.round(scUsage * 1.1);
