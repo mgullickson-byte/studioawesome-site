@@ -354,7 +354,9 @@
             <select id="runlength">
               <option value="3mo">3 Months (13 weeks)</option>
               <option value="6mo">6 Months (26 weeks)</option>
-              <option value="12mo">12 Months (52 weeks)</option>
+              <option value="12mo">12 Months (1 year)</option>
+              <option value="2yr">2 Years</option>
+              <option value="perp">Perpetuity / Buyout</option>
             </select>
           </div>
         </div>
@@ -380,6 +382,7 @@
               <option value="13wk">13 Weeks</option>
               <option value="26wk">6 Months</option>
               <option value="52wk">52 Weeks / 1 Year</option>
+              <option value="2yr">2 Years</option>
             </select>
           </div>
         </div>
@@ -659,19 +662,19 @@
     // TV Broadcast + Digital (combined, n=380 TV+Digital, n=51 TV-only)
     // Primary axis: term/duration (market breakdowns have thin samples)
     const SC_TV = {
-      local:        { '3mo': 1000, '6mo': 1500, '12mo': 1800 },
-      regional:     { '3mo': 1250, '6mo': 2000, '12mo': 2500 },
-      cablenational:{ '3mo': 1500, '6mo': 2500, '12mo': 3000 },
-      national:     { '3mo': 2000, '6mo': 3000, '12mo': 3500 },
+      local:        { '3mo': 1000, '6mo': 1500, '12mo': 1800, '2yr': 2500,  'perp': 3000 },
+      regional:     { '3mo': 1250, '6mo': 2000, '12mo': 2500, '2yr': 3000,  'perp': 3500 },
+      cablenational:{ '3mo': 1500, '6mo': 2500, '12mo': 3000, '2yr': 3500,  'perp': 4500 },
+      national:     { '3mo': 2000, '6mo': 3000, '12mo': 3500, '2yr': 4500,  'perp': 6000 },
     };
 
     // Digital / OLV / Streaming (n=666)
-    // 3mo median $1,500 · 6mo $1,700 · 12mo $2,000 · 2yr $2,000
+    // 3mo median $1,500 · 6mo $1,700 · 12mo $2,000 · 2yr $2,000 · perp $1,000 (often low-budget perpetuity deals)
     const SC_DIGITAL = {
-      local:        { '3mo': 1000, '6mo': 1500, '12mo': 1750 },
-      regional:     { '3mo': 1250, '6mo': 1700, '12mo': 2000 },
-      cablenational:{ '3mo': 1500, '6mo': 2000, '12mo': 2500 },
-      national:     { '3mo': 1750, '6mo': 2350, '12mo': 3000 },
+      local:        { '3mo': 1000, '6mo': 1500, '12mo': 1750, '2yr': 2000, 'perp': 1500 },
+      regional:     { '3mo': 1250, '6mo': 1700, '12mo': 2000, '2yr': 2500, 'perp': 2000 },
+      cablenational:{ '3mo': 1500, '6mo': 2000, '12mo': 2500, '2yr': 3000, 'perp': 2500 },
+      national:     { '3mo': 1750, '6mo': 2350, '12mo': 3000, '2yr': 3500, 'perp': 3000 },
     };
 
     // Industrial / Corporate (n=130)
@@ -801,9 +804,9 @@
         local: 'Local (no majors)', ny: 'New York', chila: 'Chicago or LA',
         twomajors: 'Two Major Markets', allthree: 'All Three Majors', national: 'National Network'
       };
-      const runLabels = { '3mo': '3 Months', '6mo': '6 Months', '12mo': '12 Months' };
+      const runLabels = { '3mo': '3 Months', '6mo': '6 Months', '12mo': '12 Months', '2yr': '2 Years', 'perp': 'Perpetuity' };
       const radioRunLabels = {
-        '4wk': '4 Weeks', '8wk': '8 Weeks', '13wk': '13 Weeks', '26wk': '6 Months', '52wk': '52 Weeks'
+        '4wk': '4 Weeks', '8wk': '8 Weeks', '13wk': '13 Weeks', '26wk': '6 Months', '52wk': '1 Year', '2yr': '2 Years'
       };
       const scriptLabels = {
         '1-2': '1–2 min', '3-5': '3–5 min', '5-10': '5–10 min',
