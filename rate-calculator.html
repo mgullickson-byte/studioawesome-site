@@ -864,31 +864,25 @@
         else if (radioRun === '2yr') gvaaAllIn = Math.round(gvaaBase * 2.8);
         if (spot === '15') gvaaAllIn = Math.round(gvaaAllIn * 0.7);
 
-        // SC total (session + usage)
+        // Blend SC data + GVAA 50/50 (Josiah's preference)
         const scSession = SC_SESSION;
-        const scTotal = scSession + scUsage;
+        const blendedUsage = Math.round((scUsage + gvaaAllIn) / 2);
+        const finalTotal = scSession + blendedUsage;
 
-        // Pick whichever is higher — label honestly
-        const useScData = scTotal >= gvaaAllIn;
-        const rateLabel = useScData ? 'Market Rate (SC Data)' : 'GVAA Guideline Rate';
-        const usageAmt  = useScData ? scUsage : (gvaaAllIn - scSession);
-        const finalTotal = useScData ? scTotal : gvaaAllIn;
-
-        window._nuUsage = usageAmt;
+        window._nuUsage = blendedUsage;
         window._nuSessionIncluded = false;
         const agent = Math.round(finalTotal * AGENT_NONUNION);
         const grandTotal = finalTotal + agent;
 
         gvaaHTML = rl('Session Fee', fmtInt(scSession));
-        gvaaHTML += rl('Usage / Buyout', fmtInt(usageAmt));
+        gvaaHTML += rl('Usage / Buyout', fmtInt(blendedUsage));
         gvaaHTML += rl('Agent Fee (20%)', fmtInt(agent));
         gvaaHTML += rl('No H&R required', '✓ Non-union', false, true);
-        gvaaHTML += rl('Rate source', rateLabel, false, true);
+        gvaaHTML += rl('Rate source', 'SC Data + GVAA (50/50 blend)', false, true);
         gvaaHTML += totalBlock('Total Talent Cost', fmtInt(grandTotal), false);
 
         // Update card title dynamically
-        document.querySelector('#card-gvaa .card-title').textContent =
-          useScData ? 'Market Rate' : 'GVAA Guideline';
+        document.querySelector('#card-gvaa .card-title').textContent = 'Market Rate';
 
         // SAG
         let sagBase = null;
@@ -913,7 +907,7 @@
           window._sagBaseTotal = 0;
           sagHTML = '<p class="no-rate">Rate not available. Contact us for a quote.</p>';
         }
-        noteHTML = '<strong>Radio (Non-Union):</strong> Displays the higher of Select Casting market data (Josiah\'s cleaned dataset — verified non-union radio productions, 2022–Q1 2026) or GVAA guidelines — whichever is greater for this market/run combination. Rate source is labeled on the card. SAG-AFTRA rates effective April 1, 2025–March 31, 2026.';
+        noteHTML = '<strong>Radio (Non-Union):</strong> Usage fee is a 50/50 blend of Select Casting market data (Josiah\'s verified non-union radio productions, 2022–Q1 2026) and GVAA guidelines for this market/run combination. SAG-AFTRA rates effective April 1, 2025–March 31, 2026.';
       }
 
       // ── TV BROADCAST ──────────────────────────────────────────
