@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Studio Awesome — AI Mix Engine Survey</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; color: #1a1a1a; }
+.header { background: linear-gradient(135deg, #F9C23C, #F4773A, #F0287A); padding: 40px 24px; color: #fff; }
+.header h1 { font-size: 24px; font-weight: 700; margin-bottom: 6px; }
+.header p { font-size: 15px; opacity: 0.85; line-height: 1.5; }
+.form { max-width: 680px; margin: 24px auto; padding: 0 16px 48px; }
+.section { background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.section-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #F4773A; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #FEE5D0; }
+.question { margin-bottom: 22px; }
+.question:last-child { margin-bottom: 0; }
+label { display: block; font-size: 15px; font-weight: 600; color: #1a1a1a; margin-bottom: 8px; line-height: 1.4; }
+.sub { display: block; font-size: 13px; color: #666; font-weight: 400; margin-top: 2px; }
+input[type="text"], textarea, select { width: 100%; padding: 10px 14px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; font-family: inherit; color: #1a1a1a; }
+input[type="text"]:focus, textarea:focus { outline: none; border-color: #F4773A; }
+textarea { min-height: 80px; resize: vertical; }
+.radio-group { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+.radio-group label { font-weight: 400; font-size: 14px; display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.radio-group input { width: auto; }
+.submit-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #F4773A, #F0287A); color: #fff; border: none; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 8px; }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>Studio Awesome — AI Mix Engine</h1>
+  <p>Help us train the AI to mix like a real SA engineer. Your answers become the AI's permanent knowledge base.</p>
+</div>
+<form class="form">
+  <div class="section">
+    <div class="section-title">About You</div>
+    <div class="question"><label>Your name</label><input type="text" placeholder="e.g. Josiah Kosier"></div>
+    <div class="question"><label>Years of mixing experience</label><input type="text" placeholder="e.g. 15 years"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Levels & Balance</div>
+    <div class="question"><label>Starting level for VO in a commercial mix<span class="sub">Where do you set the VO fader first, before anything else?</span></label><textarea placeholder="e.g. VO up to -6dBFS peak, then set everything relative to that..."></textarea></div>
+    <div class="question"><label>Music level under a talking announcer<span class="sub">Rough dB relationship or ratio</span></label><textarea placeholder="e.g. Music sits 8-12dB below VO during narration..."></textarea></div>
+    <div class="question"><label>Music level under a tag vs. main VO</label><textarea placeholder="e.g. Tags let music come up a bit more..."></textarea></div>
+    <div class="question"><label>VO recorded too hot — what do you do first?</label><textarea placeholder="e.g. Check for clipping, normalize or gain stage down..."></textarea></div>
+    <div class="question"><label>VO recorded too quiet — what do you do?</label><textarea placeholder="e.g. Normalize first, then check noise floor before boosting..."></textarea></div>
+    <div class="question"><label>Normalize vs. manual level riding — when do you use each?</label><textarea placeholder="e.g. Normalize for quick online, manual riding for broadcast..."></textarea></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Music Handling</div>
+    <div class="question"><label>Typical music lead-in before VO — :30 vs :60?</label><textarea placeholder="e.g. :30 = 0.5-1 sec lead-in, :60 = up to 2-3 sec musical intro..."></textarea></div>
+    <div class="question"><label>How do you duck music under VO?<span class="sub">Speed of duck, how much, automation technique?</span></label><textarea placeholder="e.g. Fast attack 100ms, slow release 500ms, duck 8-10dB..."></textarea></div>
+    <div class="question"><label>Music without a natural edit point for a tag — how do you handle it?</label><textarea placeholder="e.g. Crossfade, find a beat to cut on, fade and re-enter..."></textarea></div>
+    <div class="question"><label>Music at end of spot — fade out or hold? How do you decide?</label><textarea placeholder="e.g. Tags usually hold music, spots without tags fade out last 1-2 seconds..."></textarea></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">VO Treatment</div>
+    <div class="question">
+      <label>Leading silence on a VO file — trim it or leave it?</label>
+      <div class="radio-group">
+        <label><input type="radio" name="silence"> Always trim it</label>
+        <label><input type="radio" name="silence"> Leave it — use it for timing</label>
+        <label><input type="radio" name="silence"> Depends on the spot</label>
+      </div>
+    </div>
+    <div class="question"><label>If it depends — when do you trim vs. leave?</label><textarea placeholder="e.g. Trim for tight :15s, leave for :60s where music intro covers it..."></textarea></div>
+    <div class="question">
+      <label>Breath sounds in VO — remove or leave?</label>
+      <div class="radio-group">
+        <label><input type="radio" name="breaths"> Always remove</label>
+        <label><input type="radio" name="breaths"> Leave them — sounds natural</label>
+        <label><input type="radio" name="breaths"> Remove only loud/distracting ones</label>
+        <label><input type="radio" name="breaths"> Depends on the spot</label>
+      </div>
+    </div>
+    <div class="question"><label>Two VO tracks (main + tag) — how do you approach that?</label><textarea placeholder="e.g. Tag VO usually a touch louder, music swells then ducks again under tag..."></textarea></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">SFX</div>
+    <div class="question"><label>SFX placement relative to visual cut<span class="sub">Before, on, or after? How many frames?</span></label><textarea placeholder="e.g. Hard hits land on the cut or 2-4 frames before..."></textarea></div>
+    <div class="question"><label>Hard hit vs. soft transition — how do you decide?</label><textarea placeholder="e.g. Product reveal = hard hit, emotional moment = soft crossfade..."></textarea></div>
+    <div class="question"><label>SFX level relative to VO — any rules of thumb?</label><textarea placeholder="e.g. SFX never compete with VO, usually 6-10dB below during narration..."></textarea></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Delivery Standards</div>
+    <div class="question"><label>LUFS targets by platform</label>
+      <div style="display:flex; flex-direction:column; gap:8px; margin-top:8px">
+        <div><label style="font-size:13px;font-weight:500;margin-bottom:4px">Broadcast TV</label><input type="text" placeholder="e.g. -24 LUFS integrated"></div>
+        <div><label style="font-size:13px;font-weight:500;margin-bottom:4px">Streaming / CTV</label><input type="text" placeholder="e.g. -14 LUFS integrated"></div>
+        <div><label style="font-size:13px;font-weight:500;margin-bottom:4px">Radio</label><input type="text" placeholder="e.g. -24 LUFS"></div>
+        <div><label style="font-size:13px;font-weight:500;margin-bottom:4px">Digital / Social</label><input type="text" placeholder="e.g. -14 LUFS"></div>
+      </div>
+    </div>
+    <div class="question"><label>True peak ceiling?</label><input type="text" placeholder="e.g. -1 dBTP"></div>
+    <div class="question"><label>Standard file formats you deliver?</label><textarea placeholder="e.g. WAV 48kHz 24-bit for broadcast, MP3 320 for digital..."></textarea></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">The SA Sound</div>
+    <div class="question"><label>Describe the Studio Awesome house sound in 2-3 sentences<span class="sub">What makes an SA mix sound like an SA mix?</span></label><textarea placeholder="e.g. Clean, punchy, always intelligible VO no matter the music energy..."></textarea></div>
+    <div class="question"><label>Most common mistake you fix when you receive a rough mix?</label><textarea placeholder="e.g. Music too loud, VO buried, no headroom..."></textarea></div>
+    <div class="question"><label>Anything else the AI should know before it touches a mix?</label><textarea placeholder="Add anything that would help..."></textarea></div>
+  </div>
+
+  <button type="submit" class="submit-btn">Submit to Studio Awesome AI</button>
+</form>
+</body>
+</html>
