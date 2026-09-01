@@ -782,16 +782,15 @@ a {
 
 .sa-parking-preview iframe,
 .sa-parking-preview img {
+  display: block;
   width: 100%;
-  height: 420px; /* unified window size for both locations */
+  height: auto;
   border: none;
-  /* Center-crop so both maps fill the frame similarly */
-  object-fit: cover;
+  object-fit: contain;
 }
 
-/* Argyle map: shift right to show building front on Argyle Ave */
-.sa-argyle-map {
-  object-position: 20% center;
+.sa-parking-preview iframe {
+  min-height: 420px;
 }
 
 /* Animation & ADR tiles */
