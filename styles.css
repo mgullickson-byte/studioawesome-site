@@ -763,7 +763,8 @@ a {
 .sa-parking-grid {
   display: grid;
   gap: 16px;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: minmax(260px, 760px);
+  justify-content: center;
   margin-top: 10px;
 }
 
@@ -775,9 +776,10 @@ a {
 .sa-parking-preview {
   border-radius: var(--sa-radius-md);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  overflow: hidden;
+  overflow: visible;
   background: #050505;
   margin-bottom: 8px;
+  padding: 12px;
 }
 
 .sa-parking-preview iframe,
